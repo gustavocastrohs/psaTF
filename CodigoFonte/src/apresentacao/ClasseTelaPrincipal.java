@@ -222,14 +222,13 @@ public class ClasseTelaPrincipal {
     public Image criaCodigoDeBarras() throws FachadaException {
 
         Barcode barcode;
-        
         try {
-            barcode = BarcodeFactory.createCode39(ultimoTicketGerado,false);
-            
+            barcode = BarcodeFactory.createCode128(ultimoTicketGerado);
+
             barcode.setDrawingText(false);
             BufferedImage image = new BufferedImage(100, 150, BufferedImage.TYPE_BYTE_GRAY);
             Graphics2D g = (Graphics2D) image.getGraphics();
-       //     g.setBackground(Color.black);
+            g.setBackground(Color.WHITE);
 
             barcode.draw(g, 10, 56);
             return image;

@@ -120,7 +120,12 @@ public class Operador {
                         // DEVE SER FEITO O CALCULO ( HORA ATUAL  - HORA DO TICKET )
                         if (ticket.getValor() == 0) {
                             if (calendarioTicket.get(Calendar.DATE) == calendarioAtual.get(Calendar.DATE)) {
-                                    valorCalculado = valorTicketTabela.getValor();   
+                                int horaCalculada = calendarioAtual.get(Calendar.HOUR_OF_DAY) - calendarioTicket.get(Calendar.HOUR_OF_DAY);
+                                if (horaCalculada <= 3) {
+                                    valorCalculado = valorTicketTabela.getValorAte3();
+                                } else {
+                                    valorCalculado = valorTicketTabela.getValorAcimaDe3();
+                                }
                             }
 
                         }
@@ -173,7 +178,7 @@ public class Operador {
                         ticket.setValor(calcularOValorDevido);
                         ticket.setLibera(true);
                         ticket.setIsPago(true);
-                        if (calcularOValorDevido > valorTicketTabela.getValor()) {
+                        if (calcularOValorDevido > valorTicketTabela.getValorAcimaDe3()) {
                             ticket.setPernoite(true);
                         }
                         boolean pagaTicket = baseEstacionamento.pagaTicket(ticket);
@@ -207,15 +212,5 @@ public class Operador {
         } catch (EstacionamentoException ex) {
             return "Não é possivel ler";
         }
-    }
-    /**
-     * 
-     * @param ticket ticket a ser liberado
-     * @return devolve o ticket liberado
-     */
-    public ITicket liberaTicketSemPagamento(ITicket ticket){
-        ticket.setLibera(true);
-      return ticket;
-    
     }
 }

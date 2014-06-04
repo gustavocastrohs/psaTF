@@ -20,9 +20,6 @@ public enum TipoDeTicket {
     /**
      * TicketCodigoBarras = com o codigo de  barras
      */
-    TicketCodigoBarras,
-    /**
-     * TicketBarCode = com QBarCode
-     */
-    TicketQBarCode;
+    TicketCodigoBarras;
+
 }

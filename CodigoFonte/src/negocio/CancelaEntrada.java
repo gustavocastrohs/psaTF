@@ -46,7 +46,6 @@ public class CancelaEntrada {
             throw new EstacionamentoException(ex);
         }
         TicketDecorator t = new TicketCodigoBarras(ticket);
-        
         if (ticket != null) {
             if (tipo == TipoDeTicket.TicketSimples) {
                 return ticket.toString();
