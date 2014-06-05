@@ -339,7 +339,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
      * @return indica se foi bem ou mau sucedida a ação
      * @throws EstacionamentoDAOException
      */
-    @Override
+  //  @Override
     public boolean liberaTodosTickets(Timestamp dia) throws EstacionamentoDAOException {
         String sql = "UPDATE   TICKET SET   TICKET.LIBERADO = TRUE WHERE DATE(TICKET.\"DATA\") = DATE(TIMESTAMP('" + dia + "')) ";
         try {
@@ -494,6 +494,24 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
             throw new EstacionamentoDAOException("Falha na inserção. " + ex.getMessage());
         }
 
+    }
+
+    @Override
+    public boolean liberaTicket(ITicket ticket) throws EstacionamentoDAOException {
+       
+        String sql = "UPDATE   TICKET SET   TICKET.LIBERADO = TRUE WHERE DATE(TICKET.ID ="+ticket.getId();
+        try {
+            try (Connection con = getConnection()) {
+                Statement sta = con.createStatement();
+                int res = sta.executeUpdate(sql);
+
+                sta.close();
+                return true;
+            }
+
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
 }

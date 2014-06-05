@@ -90,7 +90,9 @@ public interface IEstacionamentoDAO {
      * @return indica se foi bem ou mau sucedida a ação
      * @throws EstacionamentoDAOException
      */
-    boolean liberaTodosTickets(Timestamp dia) throws EstacionamentoDAOException;
+    //boolean liberaTodosTickets(Timestamp dia) ;
+
+    public boolean liberaTicket(ITicket ticket)throws EstacionamentoDAOException;
 
     
  

@@ -68,19 +68,6 @@ public class ModuloGerencial {
         }
     }
 
-    /**
-     *
-     * @param dia dia selecionado para liberar os tickets
-     * @return indica se foi bem ou mau sucedida a ação
-     * @throws negocio.EstacionamentoException
-     */
-    public boolean liberarTicketSemPagamento(Timestamp dia) throws EstacionamentoException {
-        try {
-            return baseEstacionamento.liberaTodosTickets(dia);
-        } catch (EstacionamentoDAOException ex) {
-            throw new EstacionamentoException(ex);
-        }
-    }
 
     /**
      *

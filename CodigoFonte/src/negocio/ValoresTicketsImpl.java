@@ -22,19 +22,10 @@ public class ValoresTicketsImpl implements IValoresTickets {
 
     /**
      *
-     * @return valor para até 3 horas no estacionamento
+     * @return valor do estacionamento
      */
     @Override
-    public double getValorAte3() {
-        return 3.5;
-    }
-
-    /**
-     *
-     * @return valores para acima de 3 horas no estacionamento
-     */
-    @Override
-    public double getValorAcimaDe3() {
+    public double getValor() {
         return 10;
     }
 

@@ -36,37 +36,7 @@ public class Operador {
         }
     }
 
-    /**
-     *
-     * @param tipo tipo do ticket que está sendo impresso , sem codigo de barras
-     * ou com
-     * @return retorna o toString() do ticket criado
-     * @throws EstacionamentoException
-     */
-    public String emisssaoDeTicketManual(TipoDeTicket tipo) throws EstacionamentoException {
-        Calendar calendar = Calendar.getInstance();
-        int horaAtual = calendar.get(Calendar.HOUR_OF_DAY);
-
-        if (horaAtual < 2 || horaAtual >= 8) {
-            ITicket ticket = null;
-            try {
-                ticket = baseEstacionamento.adicionarTicketManual();
-            } catch (EstacionamentoDAOException ex) {
-                throw new EstacionamentoException(ex);
-            }
-            TicketDecorator t = new TicketCodigoBarras(ticket);
-            if (ticket != null) {
-                if (tipo == TipoDeTicket.TicketSimples) {
-                    return ticket.toString();
-                } else {
-                    return t.toString();
-                }
-            } else {
-                return "";
-            }
-        }
-        return "\nEstacionamento Fechado";
-    }
+   
 
     /**
      *
@@ -121,11 +91,9 @@ public class Operador {
                         if (ticket.getValor() == 0) {
                             if (calendarioTicket.get(Calendar.DATE) == calendarioAtual.get(Calendar.DATE)) {
                                 int horaCalculada = calendarioAtual.get(Calendar.HOUR_OF_DAY) - calendarioTicket.get(Calendar.HOUR_OF_DAY);
-                                if (horaCalculada <= 3) {
-                                    valorCalculado = valorTicketTabela.getValorAte3();
-                                } else {
-                                    valorCalculado = valorTicketTabela.getValorAcimaDe3();
-                                }
+                               
+                                    valorCalculado = valorTicketTabela.getValor();
+                                
                             }
 
                         }
@@ -178,7 +146,7 @@ public class Operador {
                         ticket.setValor(calcularOValorDevido);
                         ticket.setLibera(true);
                         ticket.setIsPago(true);
-                        if (calcularOValorDevido > valorTicketTabela.getValorAcimaDe3()) {
+                        if (calcularOValorDevido > valorTicketTabela.getValor()) {
                             ticket.setPernoite(true);
                         }
                         boolean pagaTicket = baseEstacionamento.pagaTicket(ticket);
@@ -213,4 +181,21 @@ public class Operador {
             return "Não é possivel ler";
         }
     }
+
+
+    
+        /**
+     *
+     * @param dia dia selecionado para liberar os tickets
+     * @return indica se foi bem ou mau sucedida a ação
+     * @throws negocio.EstacionamentoException
+     */
+    public boolean  liberarTicketSemPagamento(ITicket ticket)  throws EstacionamentoException {
+        try {
+            return baseEstacionamento.liberaTicket(ticket);
+        } catch (EstacionamentoDAOException ex) {
+            throw new EstacionamentoException(ex);
+        }
+    }
+
 }

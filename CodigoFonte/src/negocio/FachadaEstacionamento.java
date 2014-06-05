@@ -65,17 +65,7 @@ public class FachadaEstacionamento {
         return cancelaEntrada.emisssaoDeTicketAutomatico(tipo);
     }
 
-    /**
-     * Ação feita no Operador
-     *
-     * @param tipo tipo de ticket criado
-     * @return cria um ticket extraviado e com codigo 0
-     * @throws EstacionamentoException
-     */
-    public String emisssaoDeTicketManual(TipoDeTicket tipo) throws EstacionamentoException {
-        return operador.emisssaoDeTicketManual(tipo);
-    }
-
+    
     /**
      * Ação feita no Operador
      *
@@ -162,8 +152,8 @@ public class FachadaEstacionamento {
      * @return indica se foi bem ou mau sucedida a ação
      * @throws negocio.EstacionamentoException
      */
-    public boolean liberarTicketSemPagamento(Timestamp dia) throws EstacionamentoException {
-        return moduloGerencial.liberarTicketSemPagamento(dia);
+    public boolean liberarTicketSemPagamento(ITicket ticket) throws EstacionamentoException {
+        return operador.liberarTicketSemPagamento(ticket);
     }
 
     /**

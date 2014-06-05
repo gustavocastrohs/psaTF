@@ -19,13 +19,9 @@ public interface IValoresTickets {
 
     /**
      *
-     * @return valor para até 3 horas no estacionamento
+     * @return valor do estacionamento
      */
-    double getValorAte3();
+    double getValor();
 
-    /**
-     *
-     * @return valores para acima de 3 horas no estacionamento
-     */
-    double getValorAcimaDe3();
+
 }
