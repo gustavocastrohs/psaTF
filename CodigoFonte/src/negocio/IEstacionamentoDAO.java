@@ -80,13 +80,18 @@ public interface IEstacionamentoDAO {
      */
     boolean pagaTicket(ITicket ticket) throws EstacionamentoDAOException;
     /**
-     *
-     * @param dia dia selecionado para liberar os tickets
+     *     
      * @return indica se foi bem ou mau sucedida a ação
      * @throws EstacionamentoDAOException
      */
     //boolean liberaTodosTickets(Timestamp dia) ;
 
+    /**
+     *
+     * @param ticket Libera ticket selecionado
+     * @return indica se foi bem ou mau sucedida a ação
+     * @throws EstacionamentoDAOException
+     */
     public boolean liberaTicket(ITicket ticket)throws EstacionamentoDAOException;
 
     
