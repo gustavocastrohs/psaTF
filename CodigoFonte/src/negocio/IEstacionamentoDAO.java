@@ -20,12 +20,7 @@ public interface IEstacionamentoDAO {
      * @throws EstacionamentoDAOException
      */
     ITicket adicionarTicketAutomatico() throws EstacionamentoDAOException;
-    /**
-     *
-     * @return retorna um ticket criado manualmente com valor 50.00 e codigo 0
-     * @throws EstacionamentoDAOException
-     */
-    ITicket adicionarTicketManual() throws EstacionamentoDAOException;
+    
     /**
      *
      * @param t recebe um ticket
@@ -94,6 +89,15 @@ public interface IEstacionamentoDAO {
 
     public boolean liberaTicket(ITicket ticket)throws EstacionamentoDAOException;
 
+    
+        /**
+     *
+     * @param placa parametro placa do carro
+     * @param chave parametro chave de segurança
+     * @return retorna um ticket se não encontrar retorna null
+     * @throws EstacionamentoDAOException caso a busca falhe retorna um erro
+     */
+    ITicket getTicketComPlacaEChave(String placa, String chave) throws EstacionamentoDAOException;
     
  
 }

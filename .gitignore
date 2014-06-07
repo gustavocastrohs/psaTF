@@ -1,4 +1,7 @@
 *.class
+private.xml
+private.properties
+config.properties
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

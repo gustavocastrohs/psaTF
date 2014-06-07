@@ -143,4 +143,28 @@ public abstract class TicketDecorator implements ITicket {
         return ticketDecorado.getDataPagamento();
     }
 
+    /**
+     * 
+     * @return recupera uma placa do ticket decorado
+     */
+    @Override
+    public String getPlaca(){    
+        return ticketDecorado.getPlaca();
+    }
+    
+    @Override
+    public String getChave(){
+    return ticketDecorado.getChave();
+    }
+    
+        @Override
+    public void setPlaca(String p) {
+        ticketDecorado.setPlaca(p);
+    }
+
+    @Override
+    public void setChave(String c) {
+        ticketDecorado.setChave(c);
+    }
+    
 }

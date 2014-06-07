@@ -45,7 +45,16 @@ public class Ticket implements ITicket {
      * indica se o ticket tem ou não pernoite
      */
     private boolean pernoite;
-
+/**
+ * placa do veiculo
+ */
+    private String placa;
+    
+    /**
+     * chave de segurança do ticket
+     */
+    private String chave;
+    
     /**
      *
      * @return retorna o que a variavel pernoite tem
@@ -136,6 +145,30 @@ public class Ticket implements ITicket {
         this.liberado = liberado;
     }
 
+
+    /**
+     *
+     * @param codigo codigo indicando tipo do ticket
+     * @param dataImpressao data de impressao do ticket
+     * @param valor valor do ticket
+     * @param liberado se o ticket está liberado
+     * @param pago se o ticket está pago
+     * @param pernoite se o ticket pernoitou
+     * @param dataPagamento a data do pagamento do ticket
+     * @param placa placa do carro
+     * @param chave chave de segurança
+     */
+    public Ticket(int codigo, Timestamp dataImpressao, double valor, boolean liberado, boolean pago, boolean pernoite, Timestamp dataPagamento,String placa, String chave) {
+        this.codigo = codigo;
+        this.dataImpressao = dataImpressao;
+        this.valor = valor;
+        this.liberado = liberado;
+        this.pago = pago;
+        this.pernoite = pernoite;
+        this.dataPagamento = dataPagamento;
+                this.placa = placa;
+        this.chave = chave;
+    }
     /**
      *
      * @param id id do ticket que veio do banco
@@ -146,38 +179,23 @@ public class Ticket implements ITicket {
      * @param pago se o ticket está pago
      * @param pernoite se o ticket pernoitou
      * @param dataPagamento a data do pagamento do ticket
+     * @param placa placa do carro
+     * @param chave chave de segurança
      */
-    public Ticket(int id, int codigo, Timestamp dataImpressao, double valor, boolean liberado, boolean pago, boolean pernoite, Timestamp dataPagamento) {
+    public Ticket(int id, int codigo, Timestamp dataImpressao, double valor, boolean liberado, boolean pago, boolean pernoite, Timestamp dataPagamento, String placa, String chave) {
         this.id = id;
         this.codigo = codigo;
         this.dataImpressao = dataImpressao;
+        this.dataPagamento = dataPagamento;
         this.valor = valor;
         this.liberado = liberado;
         this.pago = pago;
         this.pernoite = pernoite;
-        this.dataPagamento = dataPagamento;
+        this.placa = placa;
+        this.chave = chave;
     }
 
-    /**
-     *
-     * @param codigo codigo indicando tipo do ticket
-     * @param dataImpressao data de impressao do ticket
-     * @param valor valor do ticket
-     * @param liberado se o ticket está liberado
-     * @param pago se o ticket está pago
-     * @param pernoite se o ticket pernoitou
-     * @param dataPagamento a data do pagamento do ticket
-     */
-    public Ticket(int codigo, Timestamp dataImpressao, double valor, boolean liberado, boolean pago, boolean pernoite, Timestamp dataPagamento) {
-        this.codigo = codigo;
-        this.dataImpressao = dataImpressao;
-        this.valor = valor;
-        this.liberado = liberado;
-        this.pago = pago;
-        this.pernoite = pernoite;
-        this.dataPagamento = dataPagamento;
-    }
-
+    
     /**
      * auxTempoResposta:Pega a hora do ticket + 15 minutos auxTempoAtual: pega o
      * do Calendar a hora atual
@@ -235,6 +253,26 @@ public class Ticket implements ITicket {
                 + "\nDATA: " + dataImpressao
                 + "\nvalor :" + valor
                 + "\nliberado:" + liberado;
+    }
+
+    @Override
+    public String getPlaca() {
+       return placa;
+    }
+
+    @Override
+    public String getChave() {
+        return chave;
+    }
+
+    @Override
+    public void setPlaca(String p) {
+        placa = p;
+    }
+
+    @Override
+    public void setChave(String c) {
+        chave = c;
     }
 
 }

@@ -24,6 +24,19 @@ public interface ITicket {
      */
     int getCodigo();
 
+        /**
+     *
+     * @return retorna o que a variavel placa
+     */
+    String getPlaca();
+
+        /**
+     *
+     * @return retorna o que a variavel chave
+     */
+      String getChave();
+
+    
     /**
      *
      * @return retorna o que a variavel liberado tem
@@ -77,6 +90,18 @@ public interface ITicket {
      * @param p seta um valor para a variavel pago
      */
     void setIsPago(boolean p);
+    
+    /**
+     * 
+     * @param placa seta um valor para a variavel placa
+     */
+    void setPlaca (String placa);
+    /**
+     * 
+     * @param chave  seta um valor para a variavel chave
+     */
+    
+    void setChave (String chave);
 
     /**
      *
