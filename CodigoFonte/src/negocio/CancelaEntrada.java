@@ -33,15 +33,16 @@ public class CancelaEntrada {
 
     /**
      *
+     * @param placa recebe uma placa de um carro
      * @param tipo tipo do ticket que está sendo impresso , sem codigo de barras
      * ou com
      * @return retorna o toString() do ticket criado
      * @throws EstacionamentoException
      */
-    public String emisssaoDeTicketAutomatico(TipoDeTicket tipo) throws EstacionamentoException {
+    public String emisssaoDeTicketAutomatico(String placa,TipoDeTicket tipo) throws EstacionamentoException {
         ITicket ticket = null;
         try {
-            ticket = baseEstacionamento.adicionarTicketAutomatico();
+            ticket = baseEstacionamento.adicionarTicketAutomatico(placa);
         } catch (EstacionamentoDAOException ex) {
             throw new EstacionamentoException(ex);
         }

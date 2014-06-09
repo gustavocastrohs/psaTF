@@ -56,10 +56,11 @@ public class CancelaSaida {
                 boolean testaTicketSePassouDoTempoGratuito = true;
 
                 testaTicketSePassouDoTempoGratuito = testaTicketSePassouDoTempoGratuito(novoTicket);
-
+/*  se ticket gerado manual
                 if (ticket.getValor() > 0) {
                     testaTicketSePassouDoTempoGratuito = true;
                 }
+             */
                 if (testaTicketSePassouDoTempoGratuito) {
                     return "Necessário ir ao caixa";
                 }

@@ -79,8 +79,8 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
                     + "CREATE TABLE TICKET ("
                     + "ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
                     + "CODIGO INTEGER NOT NULL WITH DEFAULT  1," // 1 - normal  0 - especial 
-                    + "PLACA VARCHAR 7 ,"
-                    + "CHAVE VARCHAR 5,"
+                    + "PLACA VARCHAR (7) ,"
+                    + "CHAVE VARCHAR (5),"
                     + "LIBERADO Boolean NOT NULL WITH DEFAULT  FALSE,"
                     + "PAGO Boolean NOT NULL WITH DEFAULT  FALSE,"
                     + "PERNOITE Boolean NOT NULL WITH DEFAULT  FALSE,"
@@ -155,11 +155,11 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
      * @throws EstacionamentoDAOException
      */
     @Override
-    public ITicket adicionarTicketAutomatico() throws EstacionamentoDAOException {
-
+    public ITicket adicionarTicketAutomatico(String placa) throws EstacionamentoDAOException {
+        
         try {
             Connection con = getConnection();
-            String sql = " INSERT INTO APP.TICKET (CODIGO, DATA, VALOR,LIBERADO,PAGO,PERNOITE)  VALUES (DEFAULT, DEFAULT, DEFAULT, DEFAULT,DEFAULT,DEFAULT) ";
+            String sql = " INSERT INTO APP.TICKET (CODIGO, DATA, VALOR,LIBERADO,PAGO,PERNOITE,PLACA,CHAVE)  VALUES (DEFAULT, DEFAULT, DEFAULT, DEFAULT,DEFAULT,DEFAULT,"+placa+","+geraChave()+") ";
             PreparedStatement sta = con.prepareStatement(sql);
             sta.executeUpdate();
             sta.close();
@@ -438,11 +438,11 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
     public static void inicializaDadosNoBanco() throws EstacionamentoDAOException {
         try {
             String sql = ""
-                    + "INSERT INTO APP.TICKET (CODIGO, DATA, VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO)  VALUES"
-                    + "(DEFAULT,'2013-11-20 14:13:46.844',3.5,TRUE,TRUE,DEFAULT,'2013-11-20 14:50:46.844'),"
-                    + "(DEFAULT,'2013-11-20 19:13:46.844',10.0,TRUE,TRUE,DEFAULT,'2013-11-20 14:50:46.844'),"
-                    + "(DEFAULT,'2013-11-20 19:13:46.844',50.0,TRUE,TRUE,TRUE,'2013-11-21 14:50:46.844'),"
-                    + "(DEFAULT,'2013-11-20 08:13:46.844',200.0,TRUE,TRUE,TRUE,'2013-11-24 14:50:46.844')"
+                    + "INSERT INTO APP.TICKET (CODIGO, DATA, VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE)  VALUES"
+                    + "(DEFAULT,'2013-11-20 14:13:46.844',3.5,TRUE,TRUE,DEFAULT,'2013-11-20 14:50:46.844','ASD6574','awe87'),"
+                    + "(DEFAULT,'2013-11-20 19:13:46.844',10.0,TRUE,TRUE,DEFAULT,'2013-11-20 14:50:46.844','AXC3574','aw787'),"
+                    + "(DEFAULT,'2013-11-20 19:13:46.844',50.0,TRUE,TRUE,TRUE,'2013-11-21 14:50:46.844','AWE2174','a8e87'),"
+                    + "(DEFAULT,'2013-11-20 08:13:46.844',200.0,TRUE,TRUE,TRUE,'2013-11-24 14:50:46.844','ASD4789','a9e87')"
                     ;
             Connection con = getConnection();
             PreparedStatement sta = con.prepareStatement(sql);
@@ -450,9 +450,9 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
             sta.close();
             con.close();
              sql = ""
-                      + "INSERT INTO APP.TICKET (CODIGO, DATA, VALOR,LIBERADO,PAGO,PERNOITE)  VALUES"
-                      +"(DEFAULT,'2013-11-20 20:13:46.844',DEFAULT,TRUE,DEFAULT,DEFAULT),"
-                      + "(DEFAULT,'2013-11-20 19:13:46.844',DEFAULT,TRUE,DEFAULT,DEFAULT)";
+                      + "INSERT INTO APP.TICKET (CODIGO, DATA, VALOR,LIBERADO,PAGO,PERNOITE,,PLACA,CHAVE)  VALUES"
+                      +"(DEFAULT,'2013-11-20 20:13:46.844',DEFAULT,TRUE,DEFAULT,DEFAULT,'ASD4789','a9887'),"
+                      + "(DEFAULT,'2013-11-20 19:13:46.844',DEFAULT,TRUE,DEFAULT,DEFAULT,'ASD4789','a8787')";
              con = getConnection();
              sta = con.prepareStatement(sql);
             sta.executeUpdate();
@@ -544,6 +544,11 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
 
         
   
+    }
+
+    private String geraChave() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //randomica 5 [a..z] [0..9]
     }
 
 }

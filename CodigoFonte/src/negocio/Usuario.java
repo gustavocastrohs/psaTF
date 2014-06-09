@@ -16,6 +16,9 @@ import persistencia.EstacionamentoDAOJavaDb;
 public class Usuario {
     private IEstacionamentoDAO baseEstacionamento;
   
+    
+    
+    
     public Usuario() throws EstacionamentoException {
         try {
             baseEstacionamento = EstacionamentoDAOJavaDb.getInstance();
@@ -24,8 +27,11 @@ public class Usuario {
         }
     }
     
-    public ITicket geraCodigoDeBarras(String placa,String  chave) throws EstacionamentoDAOException{
-        
-    return  baseEstacionamento.getTicketComPlacaEChave(placa, chave);
+    public String geraCodigoDeBarras(String placa,String  chave) throws EstacionamentoDAOException{
+        ITicket ticketComPlacaEChave = baseEstacionamento.getTicketComPlacaEChave(placa, chave);
+        if (ticketComPlacaEChave== null)
+            return "Ticket não encontrado";
+        else
+            return  ticketComPlacaEChave.toString();
     }
 }

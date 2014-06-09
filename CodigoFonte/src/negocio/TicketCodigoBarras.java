@@ -27,10 +27,7 @@ public class TicketCodigoBarras extends TicketDecorator {
      */
     @Override
     public String toString() {
-        return "ID: " + getId() +
-               " COD: " + getCodigo()+
-                " hash:" + hashCode()
-                ;
+        return ""+getId();
 
     }
 

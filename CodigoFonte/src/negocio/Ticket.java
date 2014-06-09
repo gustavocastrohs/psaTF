@@ -249,7 +249,8 @@ public class Ticket implements ITicket {
     @Override
     public String toString() {
         return "ID:" + id
-                + "\nCODIGO:" + codigo
+                + "\nPLACA:" + placa
+                + "\nCHAVE:" + chave
                 + "\nDATA: " + dataImpressao
                 + "\nvalor :" + valor
                 + "\nliberado:" + liberado;

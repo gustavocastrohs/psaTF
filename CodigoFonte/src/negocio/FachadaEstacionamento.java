@@ -34,6 +34,11 @@ public class FachadaEstacionamento {
      * Nova instancia do Operador
      */
     private Operador operador = null;
+    /**
+     * Nova instancia de usuario
+     */
+    
+    private Usuario usuario = null;
 
     /**
      * Busca a instacia ativa do banco de dados inicializa as instancia de :
@@ -48,6 +53,7 @@ public class FachadaEstacionamento {
             moduloGerencial = new ModuloGerencial();
             operador = new Operador();
             cancelaSaida = new CancelaSaida();
+            usuario = new Usuario();
 
         } catch (EstacionamentoDAOException ex) {
             throw new EstacionamentoException(ex);
@@ -61,8 +67,8 @@ public class FachadaEstacionamento {
      * @return saida do toString do ticket criado
      * @throws EstacionamentoException
      */
-    public String emisssaoDeTicketAutomatico(TipoDeTicket tipo) throws EstacionamentoException {
-        return cancelaEntrada.emisssaoDeTicketAutomatico(tipo);
+    public String emisssaoDeTicketAutomatico(String placa,TipoDeTicket tipo) throws EstacionamentoException {
+        return cancelaEntrada.emisssaoDeTicketAutomatico(placa,tipo);
     }
 
     
@@ -165,5 +171,11 @@ public class FachadaEstacionamento {
      */
     public String pagaTicket(int ticket) throws EstacionamentoException {
         return operador.pagaTicket(ticket);
+    }
+    
+    
+    public String usuarioGeraCodigoDeBarras(String placa,String chave) throws EstacionamentoDAOException, EstacionamentoException{
+         return  usuario.geraCodigoDeBarras(placa, chave);
+    
     }
 }

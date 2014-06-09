@@ -19,7 +19,7 @@ public interface IEstacionamentoDAO {
      * @return devolve um ticket criado automaticamente pelo sistema
      * @throws EstacionamentoDAOException
      */
-    ITicket adicionarTicketAutomatico() throws EstacionamentoDAOException;
+    ITicket adicionarTicketAutomatico(String placa) throws EstacionamentoDAOException;
     
     /**
      *
