@@ -18,3 +18,15 @@ hs_err_pid*
 /Estacionamento/build/
 /Estacionamento/dist/
 /Estacionamento/nbproject/private/
+/EstacionamentoWeb/nbproject/private/
+/EstacionamentoWeb/build/
+/EstacionamentoWeb/dist/
+/EstacionamentoEnterprise/nbproject/private/
+/EstacionamentoEnterprise/EstacionamentoEnterprise-war/nbproject/private/
+/EstacionamentoEnterprise/EstacionamentoEnterprise-ejb/nbproject/private/
+/EstacionamentoEE/nbproject/private/
+/EstacionamentoEE/EstacionamentoEE-war/nbproject/private/
+/EstacionamentoEE/EstacionamentoEE-ejb/nbproject/private/
+/EstacionamentoEE/EstacionamentoEE-ejb/build/
+/EstacionamentoEE/EstacionamentoEE-war/build/
+/EstacionamentoEE/EstacionamentoEE-ejb/dist/

@@ -4,6 +4,7 @@
  */
 package negocio;
 
+import java.io.Serializable;
 import persistencia.EstacionamentoDAOException;
 import persistencia.EstacionamentoDAOJavaDb;
 
@@ -11,7 +12,7 @@ import persistencia.EstacionamentoDAOJavaDb;
  *
  * @author Gustavo
  */
-public class CancelaEntrada {
+public class CancelaEntrada implements Serializable{
 
     /**
      * instancia da base de dados usada para criação de tickets

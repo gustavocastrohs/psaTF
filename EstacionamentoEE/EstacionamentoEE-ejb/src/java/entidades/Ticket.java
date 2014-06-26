@@ -7,6 +7,8 @@
 package entidades;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -20,6 +22,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import negocio.ITicket;
 
 /**
  *
@@ -38,8 +41,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Ticket.findByPernoite", query = "SELECT t FROM Ticket t WHERE t.pernoite = :pernoite"),
     @NamedQuery(name = "Ticket.findByData", query = "SELECT t FROM Ticket t WHERE t.data = :data"),
     @NamedQuery(name = "Ticket.findByValor", query = "SELECT t FROM Ticket t WHERE t.valor = :valor"),
+    @NamedQuery(name = "Ticket.findLastEnter", query = "SELECT t FROM Ticket t where TICKET.ID = ( SELECT Count(ID) FROM TICKET)"),
     @NamedQuery(name = "Ticket.findByDatapagamento", query = "SELECT t FROM Ticket t WHERE t.datapagamento = :datapagamento")})
-public class Ticket implements Serializable {
+public class Ticket implements Serializable,ITicket {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,10 +90,15 @@ public class Ticket implements Serializable {
         this.data = data;
     }
 
-    public Integer getId() {
+    @Override
+        public Integer getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(Integer id) {
         this.id = id;
     }
@@ -190,5 +199,58 @@ public class Ticket implements Serializable {
     public String toString() {
         return "entidades.Ticket[ id=" + id + " ]";
     }
-    
+
+    @Override
+    public boolean isLiberado() {
+        return (boolean) liberado;
+    }
+
+    @Override
+    public boolean isPago() {
+        return (boolean) pago;
+    }
+
+
+
+    @Override
+    public Date getDataPagamento() {
+        return (Date) datapagamento;
+    }
+
+    @Override
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+
+    @Override
+    public void setLibera(boolean liberado) {
+        this.liberado= liberado;
+    }
+
+    @Override
+    public void setIsPago(boolean p) {
+        this.pago = p;
+    }
+
+    @Override
+    public boolean isPernoite() {
+            return (boolean)pernoite;
+    }
+
+    @Override
+    public void setPernoite(boolean pernoite) {
+        this.pernoite = pernoite;
+    }
+
+    @Override
+    public boolean TestaSePassouDoTempoGratuito() {
+        Calendar horarioAtual = Calendar.getInstance();
+        Timestamp auxTempoAtual = new Timestamp(horarioAtual.getTimeInMillis());
+        //Timestamp auxData = ;
+        long m = 15 * 60 * 1000;
+        Timestamp auxTempoResposta = new Timestamp(data.getTime() + m);
+        boolean resposta = auxTempoResposta.getTime() <= auxTempoAtual.getTime();
+        return resposta;
+    }
+
 }
