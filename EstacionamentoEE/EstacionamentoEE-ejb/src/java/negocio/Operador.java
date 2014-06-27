@@ -5,6 +5,7 @@
  */
 package negocio;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import org.joda.time.DateTime;
@@ -14,7 +15,7 @@ import org.joda.time.Days;
  *
  * @author Gustavo
  */
-public class Operador {
+public class Operador implements Serializable{
 
     /**
      * instancia da base de dados usada para criação de tickets

@@ -4,18 +4,15 @@
  */
 package negocio;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  *
  * @author Gustavo
  */
-public class FachadaEstacionamento {
+public class FachadaEstacionamento implements Serializable{
 
-    /**
-     * instancia da base de dados usada para criação de tickets
-     */
-    private IEstacionamentoDAO baseEstacionamento;
     /**
      * Nova instancia da Cancela de saida
      */
@@ -53,7 +50,7 @@ public class FachadaEstacionamento {
             cancelaSaida = new CancelaSaida();
             usuario = new Usuario();
 
-        
+            cancelaEntrada.emisssaoDeTicketAutomatico("fun5", TipoDeTicket.TicketSimples);
     }
 
     /**

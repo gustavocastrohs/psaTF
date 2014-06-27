@@ -6,6 +6,8 @@
 
 package negocio;
 
+import java.io.Serializable;
+
 
 
 
@@ -13,7 +15,7 @@ package negocio;
  *
  * @author Gustavo
  */
-public class Usuario {
+public class Usuario implements Serializable{
     private IEstacionamentoDAO baseEstacionamento;
   
     

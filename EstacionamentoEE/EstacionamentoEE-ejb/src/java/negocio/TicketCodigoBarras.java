@@ -4,11 +4,13 @@
  */
 package negocio;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Gustavo
  */
-public class TicketCodigoBarras extends TicketDecorator {
+public class TicketCodigoBarras extends TicketDecorator implements Serializable{
 
     /**
      *

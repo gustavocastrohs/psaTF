@@ -6,6 +6,7 @@ package negocio;
 
 
 import entidades.Ticket;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -17,7 +18,7 @@ import javax.persistence.Persistence;
  *
  * @author Gustavo
  */
-public class OperacoesNoBanco implements IOPB{
+public class OperacoesNoBanco implements IOPB,Serializable{
 
     // private String emfS;
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("EstacionamentoEE-ejbPU");
@@ -29,6 +30,7 @@ public class OperacoesNoBanco implements IOPB{
     }
 
 
+    @Override
     public List executeNativeQuery(String pesquisa) {
         String aux =pesquisa;
         List resultList = null;
@@ -126,6 +128,7 @@ public class OperacoesNoBanco implements IOPB{
     }
    
 
+    @Override
     public boolean exCadastrar(Object o) {
         try {
             tx.begin();
@@ -139,6 +142,7 @@ public class OperacoesNoBanco implements IOPB{
     }
 
     
+    @Override
     public boolean exAtualizar(Object o) {
         try {
             tx.begin();
@@ -151,6 +155,7 @@ public class OperacoesNoBanco implements IOPB{
         return false;
     }
     
+    @Override
         public boolean exExcluir(Object o) {
         try {
             tx.begin();
@@ -166,6 +171,7 @@ public class OperacoesNoBanco implements IOPB{
     }
 
 
+    @Override
     public List executeQueryByParamentroString(String queryString, String paramentro, String parametroASerConsultado) {
         try {
             tx.begin();

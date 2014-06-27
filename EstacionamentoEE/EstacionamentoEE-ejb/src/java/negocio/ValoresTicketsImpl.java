@@ -5,11 +5,13 @@
  */
 package negocio;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Gustavo
  */
-public class ValoresTicketsImpl implements IValoresTickets {
+public class ValoresTicketsImpl implements IValoresTickets,Serializable {
 
     /**
      *

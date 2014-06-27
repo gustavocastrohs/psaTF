@@ -4,6 +4,7 @@
  */
 package negocio;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 
@@ -11,7 +12,7 @@ import java.sql.Timestamp;
  *
  * @author Gustavo
  */
-public class ModuloGerencial {
+public class ModuloGerencial implements Serializable{
 
     /**
      * instancia da base de dados usada para criação de tickets

@@ -4,18 +4,18 @@
  * and open the template in the editor.
  */
 
-package negocio;
+package SB;
 
-import java.util.List;
 import javax.ejb.Local;
+import negocio.EstacionamentoException;
 
 /**
  *
  * @author Gustavo
  */
 @Local
-public interface SBOperadorLocal {
+public interface SBCancelaEntradaLocal {
 
-     public List<ITicket> getTickets();
+    String emitirTicket(String placa) throws EstacionamentoException;
     
 }

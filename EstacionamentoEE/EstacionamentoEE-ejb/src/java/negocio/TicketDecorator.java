@@ -4,6 +4,7 @@
  */
 package negocio;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -11,7 +12,7 @@ import java.util.Date;
  *
  * @author Gustavo
  */
-public abstract class TicketDecorator implements ITicket {
+public abstract class TicketDecorator implements ITicket,Serializable {
 
     /**
      * cria uma instancia de um ITicket
