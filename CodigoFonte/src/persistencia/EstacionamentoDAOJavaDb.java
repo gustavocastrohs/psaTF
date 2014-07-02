@@ -1,10 +1,12 @@
 package persistencia;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import negocio.ITicket;
-import negocio.Ticket;
 
 /**
  *
@@ -75,19 +77,21 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
             Connection con = DriverManager.getConnection("jdbc:derby:derbyDB;create=true");
             Statement sta = con.createStatement();
 // para verificar se um ticket está pago ou não basta verificar se o falor dele é ou não maior que zero.
-            String sql = ""
-                    + "CREATE TABLE TICKET ("
-                    + "ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
-                    + "CODIGO INTEGER NOT NULL WITH DEFAULT  1," // 1 - normal  0 - especial 
-                    + "PLACA VARCHAR (7) ,"
-                    + "CHAVE VARCHAR (5),"
-                    + "LIBERADO Boolean NOT NULL WITH DEFAULT  FALSE,"
-                    + "PAGO Boolean NOT NULL WITH DEFAULT  FALSE,"
-                    + "PERNOITE Boolean NOT NULL WITH DEFAULT  FALSE,"
-                    + "DATA TIMESTAMP   NOT NULL WITH DEFAULT  CURRENT_TIMESTAMP,"
-                    + "VALOR DOUBLE  WITH DEFAULT  0.0,"                    
-                    + "DATAPAGAMENTO TIMESTAMP"
-                    + ")";
+            String sql = ""+
+"create table TICKET\n" +
+"(\n" +
+"	ID INTEGER  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),\n" +
+"	CODIGO INTEGER default 1 not null,\n" +
+"	PLACA VARCHAR(7),\n" +
+"	CHAVE VARCHAR(5),\n" +
+"	LIBERADO BOOLEAN default FALSE not null,\n" +
+"	PAGO BOOLEAN default FALSE not null,\n" +
+"	PERNOITE BOOLEAN default FALSE not null,\n" +
+"	VALOR DOUBLE default 0.0,\n" +
+"        DATAIMPRESSAO TIMESTAMP default CURRENT_TIMESTAMP not null,\n" +
+"	DATAPAGAMENTO TIMESTAMP,\n" +
+"        CONSTRAINT primary_key PRIMARY KEY (id)\n" +
+")";
             sta.executeUpdate(sql);
             sta.close();
             con.close();
@@ -111,7 +115,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
         if (n <= ultimoTicketIncluso.getId()) {
             List<ITicket> lista = new LinkedList<>();
 
-            String sql = "SELECT ID,CODIGO,DATA,VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE from TICKET where TICKET.ID = " + n;
+            String sql = "SELECT ID,CODIGO,DATAIMPRESSAO,VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE from TICKET where TICKET.ID = " + n;
             try {
                 try (Connection con = getConnection()) {
                     Statement sta = con.createStatement();
@@ -120,7 +124,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
                         ITicket t = new Ticket(
                                 res.getInt("ID"),
                                 res.getInt("CODIGO"),
-                                res.getTimestamp("DATA"),
+                                res.getTimestamp("DATAIMPRESSAO"),
                                 res.getDouble("VALOR"),
                                 res.getBoolean("LIBERADO"),
                                 res.getBoolean("PAGO"),
@@ -159,7 +163,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
         
         try {
             Connection con = getConnection();
-            String sql = " INSERT INTO APP.TICKET (CODIGO, DATA, VALOR,LIBERADO,PAGO,PERNOITE,PLACA,CHAVE)  VALUES (DEFAULT, DEFAULT, DEFAULT, DEFAULT,DEFAULT,DEFAULT,"+placa+","+geraChave()+") ";
+            String sql = " INSERT INTO APP.TICKET (PLACA,CHAVE)  VALUES ('"+placa+"','"+geraChave()+"') ";
             PreparedStatement sta = con.prepareStatement(sql);
             sta.executeUpdate();
             sta.close();
@@ -213,7 +217,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
 
         List<ITicket> lista = new LinkedList<>();
 
-        String sql = "SELECT ID,CODIGO,DATA,VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO from TICKET where TICKET.ID = ( SELECT Count(ID) FROM TICKET)";
+        String sql = "SELECT ID,CODIGO,DATAIMPRESSAO,VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE from TICKET where TICKET.ID = ( SELECT Count(ID) FROM TICKET)";
         try {
             try (Connection con = getConnection()) {
                 Statement sta = con.createStatement();
@@ -222,7 +226,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
                     ITicket t = new Ticket(
                             res.getInt("ID"),
                             res.getInt("CODIGO"),
-                            res.getTimestamp("DATA"),
+                            res.getTimestamp("DATAIMPRESSAO"),
                             res.getDouble("VALOR"),
                             res.getBoolean("LIBERADO"),
                             res.getBoolean("PAGO"),
@@ -331,7 +335,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
      */
   //  @Override
     public boolean liberaTodosTickets(Timestamp dia) throws EstacionamentoDAOException {
-        String sql = "UPDATE   TICKET SET   TICKET.LIBERADO = TRUE WHERE DATE(TICKET.\"DATA\") = DATE(TIMESTAMP('" + dia + "')) ";
+        String sql = "UPDATE   TICKET SET   TICKET.LIBERADO = TRUE WHERE DATE(TICKET.\"DATAIMPRESSAO\") = DATE(TIMESTAMP('" + dia + "')) ";
         try {
             try (Connection con = getConnection()) {
                 Statement sta = con.createStatement();
@@ -364,9 +368,9 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
         String sql = "";
 
         if (dia != null) {
-            sql = "SELECT COUNT(*) FROM TICKET WHERE DATE(TICKET.\"DATA\") = DATE(TIMESTAMP('" + dia + "')) AND PAGO = FALSE AND LIBERADO = TRUE";
+            sql = "SELECT COUNT(*) FROM TICKET WHERE DATE(TICKET.\"DATAIMPRESSAO\") = DATE(TIMESTAMP('" + dia + "')) AND PAGO = FALSE AND LIBERADO = TRUE";
         } else {
-            sql = "SELECT COUNT(*) FROM TICKET WHERE MONTH(TICKET.\"DATA\") = " + mes + " AND PAGO = FALSE AND LIBERADO = TRUE";
+            sql = "SELECT COUNT(*) FROM TICKET WHERE MONTH(TICKET.\"DATAIMPRESSAO\") = " + mes + " AND PAGO = FALSE AND LIBERADO = TRUE";
         }
         int resultado = 0;
         try {
@@ -438,7 +442,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
     public static void inicializaDadosNoBanco() throws EstacionamentoDAOException {
         try {
             String sql = ""
-                    + "INSERT INTO APP.TICKET (CODIGO, DATA, VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE)  VALUES"
+                    + "INSERT INTO APP.TICKET (CODIGO, DATAIMPRESSAO, VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE)  VALUES"
                     + "(DEFAULT,'2013-11-20 14:13:46.844',3.5,TRUE,TRUE,DEFAULT,'2013-11-20 14:50:46.844','ASD6574','awe87'),"
                     + "(DEFAULT,'2013-11-20 19:13:46.844',10.0,TRUE,TRUE,DEFAULT,'2013-11-20 14:50:46.844','AXC3574','aw787'),"
                     + "(DEFAULT,'2013-11-20 19:13:46.844',50.0,TRUE,TRUE,TRUE,'2013-11-21 14:50:46.844','AWE2174','a8e87'),"
@@ -450,7 +454,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
             sta.close();
             con.close();
              sql = ""
-                      + "INSERT INTO APP.TICKET (CODIGO, DATA, VALOR,LIBERADO,PAGO,PERNOITE,,PLACA,CHAVE)  VALUES"
+                      + "INSERT INTO APP.TICKET (CODIGO, DATAIMPRESSAO, VALOR,LIBERADO,PAGO,PERNOITE,,PLACA,CHAVE)  VALUES"
                       +"(DEFAULT,'2013-11-20 20:13:46.844',DEFAULT,TRUE,DEFAULT,DEFAULT,'ASD4789','a9887'),"
                       + "(DEFAULT,'2013-11-20 19:13:46.844',DEFAULT,TRUE,DEFAULT,DEFAULT,'ASD4789','a8787')";
              con = getConnection();
@@ -459,7 +463,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
             sta.close();
             con.close();
             sql = ""
-                    + "INSERT INTO APP.TICKET (DATA)  VALUES"
+                    + "INSERT INTO APP.TICKET (DATAIMPRESSAO)  VALUES"
                     + " ('2013-11-20 14:13:46.844'),"
                     + "('2013-11-20 15:13:46.844'),"
                     + "('2013-11-20 16:13:46.844'),"
@@ -471,7 +475,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
             sta.close();
             con.close();
             sql = ""
-                    + "INSERT INTO APP.TICKET (CODIGO, DATA, VALOR,LIBERADO,PAGO,PERNOITE)  VALUES "
+                    + "INSERT INTO APP.TICKET (CODIGO, DATAIMPRESSAO, VALOR,LIBERADO,PAGO,PERNOITE)  VALUES "
                     + "(0, '2013-11-20 11:13:46.844', 50.0, DEFAULT,DEFAULT,DEFAULT),"
                     + "(0, DEFAULT, 50.0, DEFAULT,DEFAULT,DEFAULT)";;
             con = getConnection();
@@ -509,7 +513,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
    
         List<ITicket> lista = new LinkedList<>();
 
-            String sql = "SELECT ID,CODIGO,DATA,VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE from TICKET where TICKET.PLACA = " + placa+ "TICKET.CHAVE="+chave;
+            String sql = "SELECT ID,CODIGO,DATAIMPRESSAO,VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE from TICKET where TICKET.PLACA = '" + placa+ "' and TICKET.CHAVE= '"+chave+"'";
             try {
                 try (Connection con = getConnection()) {
                     Statement sta = con.createStatement();
@@ -518,7 +522,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
                         ITicket t = new Ticket(
                                 res.getInt("ID"),
                                 res.getInt("CODIGO"),
-                                res.getTimestamp("DATA"),
+                                res.getTimestamp("DATAIMPRESSAO"),
                                 res.getDouble("VALOR"),
                                 res.getBoolean("LIBERADO"),
                                 res.getBoolean("PAGO"),
@@ -533,7 +537,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
                     sta.close();
                 }
 
-            } catch (Exception ex) {
+            } catch (SQLException ex) {
                 throw new EstacionamentoDAOException("Falha na busca. " + ex.getMessage());
             }
             if (!lista.isEmpty()) {
@@ -547,8 +551,21 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
     }
 
     private String geraChave() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        //randomica 5 [a..z] [0..9]
+            
+        String chave = "";
+        
+        Random gerador = new Random();
+        	ArrayList<String> alfabeto = new ArrayList( Arrays.asList( "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
+"R", "S", "T", "U", "V", "W", "X", "Y", "Z","0","1", "2","3","4","5","6","7","8","9"));
+        for (int i = 0;i<5;i++){
+        int numero = gerador.nextInt(36);
+        chave = chave + alfabeto.get(numero);
+        
+        }
+        System.out.println(chave);
+        return chave;
+        
     }
+
 
 }

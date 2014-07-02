@@ -5,14 +5,16 @@
 package negocio;
 
 import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persistencia.EstacionamentoDAOException;
 import persistencia.EstacionamentoDAOJavaDb;
-
 /**
  *
  * @author Gustavo
  */
-public class FachadaEstacionamento {
+
+public class FachadaEstacionamento implements interfaces.IFachadaEstacionamento{
 
     /**
      * instancia da base de dados usada para criação de tickets
@@ -39,14 +41,17 @@ public class FachadaEstacionamento {
      */
     
     private Usuario usuario = null;
-
+/**
+ *  instancia singletone da fachada
+ */
+    private static FachadaEstacionamento fachada = null;
     /**
      * Busca a instacia ativa do banco de dados inicializa as instancia de :
      * CancelaSaida,,CancelaEntrada,ModuloGerencial e Operador
      *
      * @throws EstacionamentoException
      */
-    public FachadaEstacionamento() throws EstacionamentoException {
+    private FachadaEstacionamento() throws EstacionamentoException {
         try {
             baseEstacionamento = EstacionamentoDAOJavaDb.getInstance();
             cancelaEntrada = new CancelaEntrada();
@@ -59,6 +64,12 @@ public class FachadaEstacionamento {
             throw new EstacionamentoException(ex);
         }
     }
+    public static FachadaEstacionamento getInstace() throws EstacionamentoException {
+        if (fachada == null) {
+            fachada = new FachadaEstacionamento();
+        }
+        return fachada;
+    }
 
     /**
      * Ação feita na CancelaEntrada
@@ -67,8 +78,12 @@ public class FachadaEstacionamento {
      * @return saida do toString do ticket criado
      * @throws EstacionamentoException
      */
-    public String emisssaoDeTicketAutomatico(String placa,TipoDeTicket tipo) throws EstacionamentoException {
-        return cancelaEntrada.emisssaoDeTicketAutomatico(placa,tipo);
+    public String emisssaoDeTicketAutomatico(String placa, TipoDeTicket tipo) throws EstacionamentoException {
+        if (placa.length() == 7) {
+            return cancelaEntrada.emisssaoDeTicketAutomatico(placa, tipo);
+        } else {
+            throw new EstacionamentoException("Tamanho incorreto de placa ela deve ser de 7 caracteres");
+        }
     }
 
     
@@ -154,6 +169,7 @@ public class FachadaEstacionamento {
      *
      * Ação feita no ModuloGerencial
      *
+     * @param ticket
      * @param dia dia selecionado para liberar os tickets
      * @return indica se foi bem ou mau sucedida a ação
      * @throws negocio.EstacionamentoException
@@ -174,8 +190,14 @@ public class FachadaEstacionamento {
     }
     
     
-    public String usuarioGeraCodigoDeBarras(String placa,String chave) throws EstacionamentoDAOException, EstacionamentoException{
-         return  usuario.geraCodigoDeBarras(placa, chave);
-    
+    @Override
+    public String usuarioGeraCodigoDeBarras(String placa,String chave)   {
+ 
+        try {
+            return  usuario.geraCodigoDeBarras(placa, chave);
+        } catch (EstacionamentoException ex) {
+           return ex.getMessage();
+        }
+
     }
 }

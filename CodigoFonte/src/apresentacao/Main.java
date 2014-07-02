@@ -6,10 +6,12 @@
 
 package apresentacao;
 
+import interfaces.IFachadaEstacionamento;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import negocio.EstacionamentoException;
 import negocio.FachadaEstacionamento;
+import negocio.TipoDeTicket;
 
 /**
  *
@@ -19,8 +21,9 @@ public class Main {
  
 public static void main(String[] args) {
     try {
-        FachadaEstacionamento f = new FachadaEstacionamento();
-        
+        FachadaEstacionamento f = FachadaEstacionamento.getInstace();
+     //   f.emisssaoDeTicketAutomatico("ass9781", TipoDeTicket.TicketSimples);
+        System.out.println(f.usuarioGeraCodigoDeBarras("ass9781", "YLN6Q"));
     } catch (EstacionamentoException ex) {
         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
     }
