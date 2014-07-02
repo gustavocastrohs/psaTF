@@ -6,29 +6,29 @@
 
 package service;
 
-import interfaces.IFachadaEstacionamento;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
-import javax.jws.WebParam;
 import negocio.EstacionamentoException;
 import negocio.FachadaEstacionamento;
-import negocio.TipoDeTicket;
 
 /**
  *
- * @author Gustavo
+ * @author 09201801
  */
+
 @WebService(serviceName = "WSCancelaEntrada")
 public class WSCancelaEntrada {
 
     /**
-     * Operação de Web service
+     * This is a sample web service operation
+     * @return 
+     * @throws negocio.EstacionamentoException
      */
-    @WebMethod(operationName = "emitirTicket")
-    public String emitirTicket(@WebParam(name = "placa") String placa) throws EstacionamentoException {
+   @WebMethod(operationName = "emitirTicket")
+    public String emitirTicket() throws EstacionamentoException {
         //TODO write your implementation code here:
-        IFachadaEstacionamento f = FachadaEstacionamento.getInstace();
+        FachadaEstacionamento f = FachadaEstacionamento.getInstace();
         
-        return f.emisssaoDeTicketAutomatico(placa, TipoDeTicket.TicketSimples);
+        return f.emisssaoDeTicketAutomatico();
     }
 }

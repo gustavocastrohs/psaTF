@@ -5,6 +5,9 @@
 package negocio;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 import persistencia.EstacionamentoDAOException;
 import persistencia.EstacionamentoDAOJavaDb;
 
@@ -12,7 +15,7 @@ import persistencia.EstacionamentoDAOJavaDb;
  *
  * @author Gustavo
  */
-public class CancelaEntrada implements Serializable{
+public class CancelaEntrada implements Serializable {
 
     /**
      * instancia da base de dados usada para criação de tickets
@@ -40,7 +43,7 @@ public class CancelaEntrada implements Serializable{
      * @return retorna o toString() do ticket criado
      * @throws EstacionamentoException
      */
-    public String emisssaoDeTicketAutomatico(String placa,TipoDeTicket tipo) throws EstacionamentoException {
+    public String emisssaoDeTicketAutomatico(String placa) throws EstacionamentoException {
         ITicket ticket = null;
         try {
             ticket = baseEstacionamento.adicionarTicketAutomatico(placa);
@@ -49,14 +52,53 @@ public class CancelaEntrada implements Serializable{
         }
         TicketDecorator t = new TicketCodigoBarras(ticket);
         if (ticket != null) {
-            if (tipo == TipoDeTicket.TicketSimples) {
-                return ticket.toString();
-            } else {
-                return t.toString();
-            }
+
+            return ticket.toString();
+
         } else {
             return "";
         }
+
+    }
+
+    public String emisssaoDeTicketAutomatico() throws EstacionamentoException {
+        ITicket ticket = null;
+        try {
+            ticket = baseEstacionamento.adicionarTicketAutomatico(leitoOptico());
+        } catch (EstacionamentoDAOException ex) {
+            throw new EstacionamentoException(ex);
+        }
+        TicketDecorator t = new TicketCodigoBarras(ticket);
+        if (ticket != null) {
+
+            return ticket.toString();
+
+        } else {
+            return "";
+        }
+
+    }
+
+    private String leitoOptico() {
+
+        String novaPlaca = "";
+
+        Random gerador = new Random();
+        ArrayList<String> alfabeto = new ArrayList(Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
+                "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"));
+        ArrayList<String> numeros = new ArrayList(Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"));
+        for (int i = 0; i < 3; i++) {
+            int numero = gerador.nextInt(26);
+            novaPlaca = novaPlaca + alfabeto.get(numero);
+
+        }
+        for (int i = 0; i < 5; i++) {
+            int numero = gerador.nextInt(10);
+            novaPlaca = novaPlaca + numeros.get(numero);
+
+        }
+        // System.out.println(novaPlaca);
+        return novaPlaca;
 
     }
 

@@ -6,34 +6,33 @@
 
 package service;
 
+import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
-import javax.jws.WebService;
 import negocio.EstacionamentoException;
 import negocio.FachadaEstacionamento;
-import interfaces.IFachadaEstacionamento;
 
 /**
  *
- * @author Gustavo
+ * @author 09201801
  */
 @WebService(serviceName = "WSCancelaSaida")
 public class WSCancelaSaida {
 
     /**
-     * Operação de Web service
-     * @param codigo
+     * This is a sample web service operation
+     * @param placa
      * @return 
-     * @throws negocio.EstacionamentoException
+     * @throws negocio.EstacionamentoException 
      */
-    @WebMethod(operationName = "validaTicket")
-    public String validaTicket(@WebParam(name = "codigo") String codigo) throws EstacionamentoException {
-        IFachadaEstacionamento  f = FachadaEstacionamento.getInstace();
+ @WebMethod(operationName = "validaTicket")
+    public String validaTicket(@WebParam(name = "codigo") String placa) throws EstacionamentoException {
+        FachadaEstacionamento  f = FachadaEstacionamento.getInstace();
         try{
-        f.validacaoDeTicketCancelaSaida(Integer.parseInt(codigo));
+           return f.validacaoDeTicketCancelaSaida(Integer.parseInt(placa));
         }catch(NumberFormatException e){
         throw  new EstacionamentoException("O valor inserido não é um numero");
         }
-        return "";
+      
     }
 }

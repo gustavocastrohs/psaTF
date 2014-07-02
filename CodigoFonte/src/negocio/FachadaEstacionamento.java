@@ -14,7 +14,7 @@ import persistencia.EstacionamentoDAOJavaDb;
  * @author Gustavo
  */
 
-public class FachadaEstacionamento implements interfaces.IFachadaEstacionamento{
+public class FachadaEstacionamento {
 
     /**
      * instancia da base de dados usada para criação de tickets
@@ -64,28 +64,36 @@ public class FachadaEstacionamento implements interfaces.IFachadaEstacionamento{
             throw new EstacionamentoException(ex);
         }
     }
-    public static FachadaEstacionamento getInstace() throws EstacionamentoException {
+    public static FachadaEstacionamento getInstace() {
         if (fachada == null) {
-            fachada = new FachadaEstacionamento();
+            try {
+                fachada = new FachadaEstacionamento();
+            } catch (EstacionamentoException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
         return fachada;
+        
     }
 
     /**
      * Ação feita na CancelaEntrada
      *
+     * @param placa
      * @param tipo tipo de ticket selecionado
      * @return saida do toString do ticket criado
      * @throws EstacionamentoException
      */
-    public String emisssaoDeTicketAutomatico(String placa, TipoDeTicket tipo) throws EstacionamentoException {
+    public String emisssaoDeTicketAutomatico(String placa) throws EstacionamentoException {
         if (placa.length() == 7) {
-            return cancelaEntrada.emisssaoDeTicketAutomatico(placa, tipo);
+            return cancelaEntrada.emisssaoDeTicketAutomatico(placa);
         } else {
             throw new EstacionamentoException("Tamanho incorreto de placa ela deve ser de 7 caracteres");
         }
     }
-
+ public String emisssaoDeTicketAutomatico() throws EstacionamentoException{
+   return cancelaEntrada.emisssaoDeTicketAutomatico();
+ }
     
     /**
      * Ação feita no Operador
@@ -190,7 +198,7 @@ public class FachadaEstacionamento implements interfaces.IFachadaEstacionamento{
     }
     
     
-    @Override
+   
     public String usuarioGeraCodigoDeBarras(String placa,String chave)   {
  
         try {
@@ -200,4 +208,5 @@ public class FachadaEstacionamento implements interfaces.IFachadaEstacionamento{
         }
 
     }
+
 }

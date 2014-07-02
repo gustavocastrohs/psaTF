@@ -5,17 +5,13 @@
  */
 package web;
 
-import interfaces.IFachadaEstacionamento;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import negocio.EstacionamentoException;
+import negocio.FachadaEstacionamento;
 import negocio.ITicket;
-import negocio.TipoDeTicket;
 import persistencia.Ticket;
 
 /**
@@ -26,12 +22,42 @@ import persistencia.Ticket;
 @RequestScoped
 public class FachadaBean {
 
-    @EJB(name = "fachadaEstacionamento")
-    private IFachadaEstacionamento fachada;
+    @EJB(name = "fachada")
+    private final FachadaEstacionamento fachada = FachadaEstacionamento.getInstace();
+    
+    private String idTicket;
+    private int dia;
+    private int mes;
 
-    public String validacaoDeTicketCancelaSaida(String ticket) {
+    public int getDia() {
+        return dia;
+    }
+
+    public void setDia(int dia) {
+        this.dia = dia;
+    }
+
+    public int getMes() {
+        return mes;
+    }
+
+    public void setMes(int mes) {
+        this.mes = mes;
+    }
+    
+    public String getIdTicket() {
+        return idTicket;
+    }
+
+    public void setIdTicket(String idTicket) {
+        this.idTicket = idTicket;
+    }
+
+
+    public String validacaoDeTicketCancelaSaida() {
+        
         try {
-            return fachada.validacaoDeTicketCancelaSaida(Integer.parseInt(ticket));
+            return fachada.validacaoDeTicketCancelaSaida(Integer.parseInt(idTicket));
         } catch (EstacionamentoException ex) {
             return ex.getMessage();
         }
@@ -46,11 +72,7 @@ public class FachadaBean {
     }
 
     public String usuarioGeraCodigoDeBarras(String ticket, String chave) {
-        try {
-            return fachada.usuarioGeraCodigoDeBarras(ticket, chave);
-        } catch (EstacionamentoException ex) {
-            return ex.getMessage();
-        }
+        return fachada.usuarioGeraCodigoDeBarras(ticket, chave);
     }
 
     public String calcularOQueTemQueSerPago(String ticket) {
@@ -62,9 +84,17 @@ public class FachadaBean {
     }
 
     public String emisssaoDeTicketAutomatico(String placa) {
+        try {
+            return fachada.emisssaoDeTicketAutomatico(placa);
+        } catch (EstacionamentoException ex) {
+            return ex.getMessage();
+        }
+    }
+
+    public String emisssaoDeTicketAutomatico() {
 
         try {
-            return fachada.emisssaoDeTicketAutomatico(placa, TipoDeTicket.TicketSimples);
+                return fachada.emisssaoDeTicketAutomatico();
         } catch (EstacionamentoException ex) {
             return ex.getMessage();
         }
@@ -78,7 +108,8 @@ public class FachadaBean {
             return ex.getMessage();
         }
     }
-        public String getNumeroDeTicketsPagos(Timestamp dia, int mes) {
+
+    public String getNumeroDeTicketsPagos(Timestamp dia, int mes) {
 
         try {
             return "" + fachada.getNumeroDeTicketsPagos(dia, mes);
@@ -86,24 +117,17 @@ public class FachadaBean {
             return ex.getMessage();
         }
     }
-                public String liberarTicketSemPagamento(String ticket) {
+
+    public String liberarTicketSemPagamento(String ticket) {
 
         try {
             ITicket t = new Ticket(Integer.parseInt(ticket));
-            
+
             return "" + fachada.liberarTicketSemPagamento(t);
         } catch (EstacionamentoException ex) {
             return ex.getMessage();
         }
     }
 
-    /**
-
-     * public boolean liberarTicketSemPagamento(negocio.ITicket ticket) throws
-     * EstacionamentoException;
-     *
-     * public String pagaTicket(int ticket) throws EstacionamentoException;
-     *
-     *
-     */
+   
 }

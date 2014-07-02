@@ -43,33 +43,27 @@ public class CancelaSaida implements Serializable{
  * @throws EstacionamentoException 
  */
     public String testaSeTicketEstaLiberado(int novoTicket) throws EstacionamentoException {
-
+String resposta = "";
         Calendar calendar = Calendar.getInstance();
-        
-        int horaAtual = calendar.get(Calendar.HOUR_OF_DAY);
-           
-        if (horaAtual < 2 ||horaAtual >= 8) {
-            ticket = getTicket(novoTicket);
-                if (ticket.isLiberado()) {
-                    return ticket.getId() + " Liberado";
-                }
-                else{
-                boolean testaTicketSePassouDoTempoGratuito = true;
 
-                testaTicketSePassouDoTempoGratuito = testaTicketSePassouDoTempoGratuito(novoTicket);
-/*  se ticket gerado manual
-                if (ticket.getValor() > 0) {
-                    testaTicketSePassouDoTempoGratuito = true;
-                }
-             */
-                if (testaTicketSePassouDoTempoGratuito) {
-                    return "Necessário ir ao caixa";
-                }
-                else
-                {
-                    return ticket.getId() + " Liberado";
-                }
-                }
+        int horaAtual = calendar.get(Calendar.HOUR_OF_DAY);
+         if (horaAtual < 2 || horaAtual >= 8) {
+        boolean testaTicketSePassouDoTempoGratuito = true;
+
+        testaTicketSePassouDoTempoGratuito = testaTicketSePassouDoTempoGratuito(novoTicket);
+
+        if (testaTicketSePassouDoTempoGratuito) {
+            return "Necessário ir ao caixa";
+        }else{
+       
+            ticket = getTicket(novoTicket);
+            if (ticket.isLiberado()) {
+                return ticket.getId() + " Liberado";
+            }
+            else{
+              return "Necessário ir ao caixa";
+            }
+            }
 
                 
             
