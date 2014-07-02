@@ -91,7 +91,7 @@ public class FachadaBean {
         try {
             ITicket t = new Ticket(Integer.parseInt(ticket));
             
-            return "" + fachada.liberarTicketSemPagamento(dia, mes);
+            return "" + fachada.liberarTicketSemPagamento(t);
         } catch (EstacionamentoException ex) {
             return ex.getMessage();
         }
