@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      >
+    <h:head>
+        <title>Usuario</title>
+    </h:head>
+    <h:body>
+     
+          
+ <h:form>
+
+            
+           Sua placa:<br/>
+            <h:inputText id="idTicket" value="#{fachadaBean.placa}"/>
+            <br/>
+
+            Sua chave:<br/>
+            <h:inputText id="Chave" value="#{fachadaBean.chave}"/>
+            <br/>
+            <h:commandButton 
+                id="btEnviar"
+                value="Enviar"
+                action="#{fachadaBean.usuarioGeraCodigoDeBarras()}"
+            />
+        
+        </h:form>
+      
+       
+    
+       </h:body>
+</html>

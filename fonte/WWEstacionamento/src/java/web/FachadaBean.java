@@ -57,13 +57,7 @@ public class FachadaBean {
         this.chave = chave;
     }
 
-    public String getResultadoGetContadores() {
-        return resultado;
-    }
-
-    public void setResultadoGetContadores(String resultadoGetContadores) {
-        this.resultado = resultadoGetContadores;
-    }
+   
 
     public int getAno() {
         return ano;
@@ -73,13 +67,6 @@ public class FachadaBean {
         this.ano = ano;
     }
 
-    public String getResultadoValidacaoCancelaSaida() {
-        return resultado;
-    }
-
-    public void setResultadoValidacaoCancelaSaida(String resultadoValidacaoCancelaSaida) {
-        this.resultado = resultadoValidacaoCancelaSaida;
-    }
 
     public int getDia() {
         return dia;

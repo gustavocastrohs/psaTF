@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      >
+    <h:head>
+        <title>Operador</title>
+    </h:head>
+    <h:body>
+           <h:form>
+        Ticket:
+            <h:inputText id="idTicket" value="#{fachadaBean.idTicket}"/>
+     
+           <h:commandButton 
+                id="calcularOQueTemQueSerPago"
+                value="Buscar"
+                action="#{fachadaBean.calcularOQueTemQueSerPago()}"
+                />
+           <h:commandButton 
+                id="pagaTicket"
+                value="Pagar"
+                action="#{fachadaBean.pagaTicket()}"
+                />
+           <h:commandButton 
+                id="liberaSemPagamento"
+                value="Liberar sem Pagamento"
+                action="#{fachadaBean.liberarTicketSemPagamento()}"
+                />
+      <br/>
+            <h:outputText value="#{fachadaBean.resultado}"/>
+       </h:form>  
+        
+       </h:body>
+</html>

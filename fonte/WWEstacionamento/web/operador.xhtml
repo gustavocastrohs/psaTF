@@ -6,7 +6,8 @@
     </h:head>
     <h:body>
            <h:form>
-        Ticket:<h:inputText id="ticketASerTestado"></h:inputText>
+        Ticket:
+            <h:inputText id="idTicket" value="#{fachadaBean.idTicket}"/>
      
            <h:commandButton 
                 id="calcularOQueTemQueSerPago"
@@ -23,7 +24,8 @@
                 value="Liberar sem Pagamento"
                 action="#{fachadaBean.liberarTicketSemPagamento()}"
                 />
-      
+      <br/>
+            <h:outputText value="#{fachadaBean.resultado}"/>
        </h:form>  
         
        </h:body>
