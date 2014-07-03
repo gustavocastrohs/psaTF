@@ -21,15 +21,14 @@ import persistencia.Ticket;
 @RequestScoped
 public class FachadaBean {
 
-    
     private final FachadaEstacionamento fachada = FachadaEstacionamento.getInstace();
-    
+
     private String idTicket;
     private int dia;
     private int mes;
     private int ano;
-    private String resultadoValidacaoCancelaSaida;
-    private String resultadoGetContadores="";
+
+    private String resultado = "";
     private String placa;
     private String chave;
     private String codigoBarras;
@@ -41,7 +40,7 @@ public class FachadaBean {
     public void setCodigoBarras(String codigoBarras) {
         this.codigoBarras = codigoBarras;
     }
-    
+
     public String getPlaca() {
         return placa;
     }
@@ -57,16 +56,14 @@ public class FachadaBean {
     public void setChave(String chave) {
         this.chave = chave;
     }
-    
 
     public String getResultadoGetContadores() {
-        return resultadoGetContadores;
+        return resultado;
     }
 
     public void setResultadoGetContadores(String resultadoGetContadores) {
-        this.resultadoGetContadores = resultadoGetContadores;
+        this.resultado = resultadoGetContadores;
     }
-    
 
     public int getAno() {
         return ano;
@@ -77,11 +74,11 @@ public class FachadaBean {
     }
 
     public String getResultadoValidacaoCancelaSaida() {
-        return resultadoValidacaoCancelaSaida;
+        return resultado;
     }
 
     public void setResultadoValidacaoCancelaSaida(String resultadoValidacaoCancelaSaida) {
-        this.resultadoValidacaoCancelaSaida = resultadoValidacaoCancelaSaida;
+        this.resultado = resultadoValidacaoCancelaSaida;
     }
 
     public int getDia() {
@@ -99,7 +96,7 @@ public class FachadaBean {
     public void setMes(int mes) {
         this.mes = mes;
     }
-    
+
     public String getIdTicket() {
         return idTicket;
     }
@@ -108,29 +105,27 @@ public class FachadaBean {
         this.idTicket = idTicket;
     }
 
-
     public void validacaoDeTicketCancelaSaida() {
-        
-  
-          resultadoValidacaoCancelaSaida=  fachada.validacaoDeTicketCancelaSaida(Integer.parseInt(idTicket));
+
+        resultado = fachada.validacaoDeTicketCancelaSaida(Integer.parseInt(idTicket));
 
     }
 
     public void validacaoDeTicketOperador() {
         try {
-            resultadoValidacaoCancelaSaida= fachada.validacaoDeTicketOperador(Integer.parseInt(idTicket));
+            resultado = fachada.validacaoDeTicketOperador(Integer.parseInt(idTicket));
         } catch (EstacionamentoException ex) {
-            resultadoValidacaoCancelaSaida= ex.getMessage();
+            resultado = ex.getMessage();
         }
     }
 
     public void usuarioGeraCodigoDeBarras() {
-       codigoBarras= fachada.usuarioGeraCodigoDeBarras(placa, chave);
+        codigoBarras = fachada.usuarioGeraCodigoDeBarras(placa, chave);
     }
 
-    public String calcularOQueTemQueSerPago(String ticket) {
+    public String calcularOQueTemQueSerPago() {
         try {
-            return fachada.calcularOQueTemQueSerPago(Integer.parseInt(ticket));
+            return fachada.calcularOQueTemQueSerPago(Integer.parseInt(idTicket));
         } catch (EstacionamentoException ex) {
             return ex.getMessage();
         }
@@ -146,46 +141,55 @@ public class FachadaBean {
 
     public String emisssaoDeTicketAutomatico() {
         try {
-                return fachada.emisssaoDeTicketAutomatico();
+            return fachada.emisssaoDeTicketAutomatico();
         } catch (EstacionamentoException ex) {
             return ex.getMessage();
         }
     }
 
     public void getNumeroDeTicketsLiberadosSemPagamento() {
-        
+
         try {
-            Timestamp s = new Timestamp(ano,mes,dia,0,0,0,0);
-            resultadoGetContadores = "" + fachada.getNumeroDeTicketsLiberadosSemPagamento(s, mes);
+            Timestamp s = new Timestamp(ano, mes, dia, 0, 0, 0, 0);
+            resultado = "" + fachada.getNumeroDeTicketsLiberadosSemPagamento(s, mes);
         } catch (EstacionamentoException ex) {
-            resultadoGetContadores= ex.getMessage();
+            resultado = ex.getMessage();
         }
     }
 
     public void getNumeroDeTicketsPagos() {
 
         try {
-          Timestamp s = new Timestamp(ano,mes,dia,0,0,0,0);
-            resultadoGetContadores= "" + fachada.getNumeroDeTicketsPagos(s, mes);
+            Timestamp s = new Timestamp(ano, mes, dia, 0, 0, 0, 0);
+            resultado = "" + fachada.getNumeroDeTicketsPagos(s, mes);
         } catch (EstacionamentoException ex) {
-            resultadoGetContadores= ex.getMessage();
+            resultado = ex.getMessage();
         }
     }
 
-    public String liberarTicketSemPagamento(String ticket) {
+    public void liberarTicketSemPagamento() {
 
         try {
-            ITicket t = new Ticket(Integer.parseInt(ticket));
+            ITicket t = new Ticket(Integer.parseInt(idTicket));
 
-            return "" + fachada.liberarTicketSemPagamento(t);
+            resultado =  "" + fachada.liberarTicketSemPagamento(t);
         } catch (EstacionamentoException ex) {
-            return ex.getMessage();
+            resultado =  ex.getMessage();
         }
     }
 
-    public void geraCodigoDeBarras() throws Exception{
-    fachada.geraCodigoDeBarras(idTicket);
-    
+    public void geraCodigoDeBarras() throws Exception {
+        fachada.geraCodigoDeBarras(idTicket);
+
     }
-   
+
+    public void getValorTotalEstadia() throws EstacionamentoException {
+        Timestamp s = new Timestamp(ano, mes, dia, 0, 0, 0, 0);
+        resultado = "" + fachada.getValorTotalEstadia(s, mes);
+
+    }
+
+    public void pagaTicket() throws EstacionamentoException {
+        resultado = fachada.pagaTicket(Integer.parseInt(idTicket));
+    }
 }

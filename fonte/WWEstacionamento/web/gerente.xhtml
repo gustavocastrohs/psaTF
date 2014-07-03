@@ -2,7 +2,7 @@
       xmlns:h="http://java.sun.com/jsf/html"         
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Cancela de Entrada</title>
+        <title>Gerente</title>
     </h:head>
     <h:body>
 
@@ -57,23 +57,38 @@
                 <f:selectItem id="ite10" itemLabel="10" itemValue="10" />
                 <f:selectItem id="ite11" itemLabel="11" itemValue="11" />
             </h:selectOneMenu>
-            <h:commandButton 
-                id="btEnviar"
-                value="tickets pagos"
-                action="#{fachadaBean.numeroDeTicketsLiberadosSemPagamento}"
-                />
-
-
+             Ano <h:selectOneMenu id="ano"
+                                  value="#{fachadaBean.ano}">
+                
+                <f:selectItem id="it1" itemLabel="2014" itemValue="2014" />
+                <f:selectItem id="it2" itemLabel="2013" itemValue="2013" />
+                
+                
+                
             </h:selectOneMenu>
+            <br/>
             <h:commandButton 
-                id="btEnviar"
-                value="sem pagamento"
-                action="#{fachadaBean.numeroDeTicketsLiberadosSemPagamento}"
+                id="numeroDeTicketsPagos"
+                value="tickets pagos"
+                action="#{fachadaBean.getNumeroDeTicketsPagos()}"
                 />
-<br/><br/><br/>
-            <h:outputText value="#{fachadaBean.resultadoGetContadores}"
+
+
+            
+            <h:commandButton 
+                id="numeroDeTicketsLiberadosSemPagamento"
+                value="sem pagamento"
+                action="#{fachadaBean.getNumeroDeTicketsLiberadosSemPagamento()}"
+                />
+                        <h:commandButton 
+                id="valorTotalEstadia"
+                value="total estadia"
+                action="#{fachadaBean.getValorTotalEstadia()}"
+                />
+            <br/><br/><br/>
+            <h:outputText value="Resultado da busca: #{fachadaBean.resultadoGetContadores}"
                           ></h:outputText>
-                          </outputText> 
+
         </h:form>
 
 

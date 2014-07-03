@@ -2,13 +2,29 @@
       xmlns:h="http://java.sun.com/jsf/html"
       >
     <h:head>
-        <title>Cancela de Entrada</title>
+        <title>Operador</title>
     </h:head>
     <h:body>
+           <h:form>
+        Ticket:<h:inputText id="ticketASerTestado"></h:inputText>
      
-          
+           <h:commandButton 
+                id="calcularOQueTemQueSerPago"
+                value="Buscar"
+                action="#{fachadaBean.calcularOQueTemQueSerPago()}"
+                />
+           <h:commandButton 
+                id="pagaTicket"
+                value="Pagar"
+                action="#{fachadaBean.pagaTicket()}"
+                />
+           <h:commandButton 
+                id="liberaSemPagamento"
+                value="Liberar sem Pagamento"
+                action="#{fachadaBean.liberarTicketSemPagamento()}"
+                />
       
-       
-    
+       </h:form>  
+        
        </h:body>
 </html>
