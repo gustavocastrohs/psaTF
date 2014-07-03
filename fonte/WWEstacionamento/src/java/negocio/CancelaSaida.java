@@ -43,7 +43,7 @@ public class CancelaSaida implements Serializable{
  * @throws EstacionamentoException 
  */
     public String testaSeTicketEstaLiberado(int novoTicket) throws EstacionamentoException {
-String resposta = "";
+
         Calendar calendar = Calendar.getInstance();
 
         int horaAtual = calendar.get(Calendar.HOUR_OF_DAY);
@@ -84,6 +84,8 @@ String resposta = "";
 
         try {
             ticket = baseDados.getTicket(novoTicket);
+            if (ticket == null)
+                throw new EstacionamentoException("Ticket não encontrado");
             return ticket.TestaSePassouDoTempoGratuito();
         } catch (EstacionamentoDAOException ex) {
             throw new EstacionamentoException(ex);
