@@ -33,12 +33,44 @@ public class FachadaBean {
     private String chave;
     private String codigoBarras;
 
-    public String getCodigoBarras() {
-        return codigoBarras;
+    public String getIdTicket() {
+        return idTicket;
     }
 
-    public void setCodigoBarras(String codigoBarras) {
-        this.codigoBarras = codigoBarras;
+    public void setIdTicket(String idTicket) {
+        this.idTicket = idTicket;
+    }
+
+    public int getDia() {
+        return dia;
+    }
+
+    public void setDia(int dia) {
+        this.dia = dia;
+    }
+
+    public int getMes() {
+        return mes;
+    }
+
+    public void setMes(int mes) {
+        this.mes = mes;
+    }
+
+    public int getAno() {
+        return ano;
+    }
+
+    public void setAno(int ano) {
+        this.ano = ano;
+    }
+
+    public String getResultado() {
+        return resultado;
+    }
+
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
     }
 
     public String getPlaca() {
@@ -57,40 +89,14 @@ public class FachadaBean {
         this.chave = chave;
     }
 
-   
-
-    public int getAno() {
-        return ano;
+    public String getCodigoBarras() {
+        return codigoBarras;
     }
 
-    public void setAno(int ano) {
-        this.ano = ano;
+    public void setCodigoBarras(String codigoBarras) {
+        this.codigoBarras = codigoBarras;
     }
 
-
-    public int getDia() {
-        return dia;
-    }
-
-    public void setDia(int dia) {
-        this.dia = dia;
-    }
-
-    public int getMes() {
-        return mes;
-    }
-
-    public void setMes(int mes) {
-        this.mes = mes;
-    }
-
-    public String getIdTicket() {
-        return idTicket;
-    }
-
-    public void setIdTicket(String idTicket) {
-        this.idTicket = idTicket;
-    }
 
     public void validacaoDeTicketCancelaSaida() {
 
