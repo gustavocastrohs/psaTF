@@ -6,8 +6,6 @@
 
 package negocio;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import persistencia.EstacionamentoDAOException;
 import persistencia.EstacionamentoDAOJavaDb;
 
@@ -29,16 +27,13 @@ public class Usuario {
         }
     }
     
-    public String geraCodigoDeBarras(String placa, String chave) throws EstacionamentoException {
+    public ITicket geraCodigoDeBarras(String placa, String chave) throws EstacionamentoException {
         ITicket ticketComPlacaEChave;
         try {
             ticketComPlacaEChave = baseEstacionamento.getTicketComPlacaEChave(placa, chave);
 
-            if (ticketComPlacaEChave == null) {
-                return "Ticket não encontrado";
-            } else {
-                return "" + ticketComPlacaEChave.getCodigo();
-            }
+            return ticketComPlacaEChave;
+
         } catch (EstacionamentoDAOException ex) {
             throw new EstacionamentoException(ex);
         }

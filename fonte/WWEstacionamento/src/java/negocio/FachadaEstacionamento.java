@@ -139,23 +139,25 @@ public class FachadaEstacionamento {
      * @return o valor total de estadias segundo o periodo selecionado
      * @throws EstacionamentoException
      */
-    public double getValorTotalEstadia(Timestamp dia, int mes) throws EstacionamentoException {
-        return moduloGerencial.getValorTotalEstadia(dia, mes);
+
+        public double getValorTotalEstadia( int mes,int ano) throws EstacionamentoException {
+        return moduloGerencial.getValorTotalEstadia(mes,ano);
     }
+
 
     /**
      * Ação feita no ModuloGerencial
      *
-     * @param dia usa um Timestamp para buscar o dia sendo se este estiver null
-     * será pelo mes
+     * @param ano
      * @param mes valor que escolhe o mes para a busca adiciona +1 pois vem de
      * um array que começa em zero e não são 11 mas 12 meses o ano
      * @return o numero total de tickets liberados sem pagamento segundo o
      * periodo selecionado
      * @throws negocio.EstacionamentoException
      */
-    public int getNumeroDeTicketsLiberadosSemPagamento(Timestamp dia, int mes) throws EstacionamentoException {
-        return moduloGerencial.getNumeroDeTicketsLiberadosSemPagamento(dia, mes);
+    
+    public int getNumeroDeTicketsLiberadosSemPagamento(int mes,int ano) throws EstacionamentoException {
+        return moduloGerencial.getNumeroDeTicketsLiberadosSemPagamento( mes,ano);
     }
 
     /**
@@ -164,13 +166,14 @@ public class FachadaEstacionamento {
      *
      * @param dia usa um Timestamp para buscar o dia sendo se este estiver null
      * será pelo mes
-     * @param mes valor que escolhe o mes para a busca adiciona +1 pois vem de
+     * @param mes valor que escolhe o mes para a busca adiciona +1 pois vem de 
      * um array que começa em zero e não são 11 mas 12 meses o ano
      * @return o valor total de tickets pagos segundo o periodo selecionado
      * @throws negocio.EstacionamentoException
      */
-    public int getNumeroDeTicketsPagos(Timestamp dia, int mes) throws EstacionamentoException {
-        return moduloGerencial.getNumeroDeTicketsPagos(dia, mes);
+    
+        public int getNumeroDeTicketsPagos( int mes,int ano) throws EstacionamentoException {
+        return moduloGerencial.getNumeroDeTicketsPagos( mes,ano);
     }
 
     /**
@@ -199,18 +202,14 @@ public class FachadaEstacionamento {
     
     
    
-    public String usuarioGeraCodigoDeBarras(String placa,String chave)   {
+    public ITicket usuarioGeraCodigoDeBarras(String placa,String chave) throws EstacionamentoException   {
  
-        try {
+        
             return  usuario.geraCodigoDeBarras(placa, chave);
-        } catch (EstacionamentoException ex) {
-           return ex.getMessage();
-        }
+        
 
     }
 
-    public void geraCodigoDeBarras(String codigo) throws Exception {
-      GeraCodigoDeBarras g = new GeraCodigoDeBarras(codigo);
-    }
+
 
 }

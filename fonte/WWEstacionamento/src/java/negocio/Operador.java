@@ -36,8 +36,6 @@ public class Operador {
         }
     }
 
-   
-
     /**
      *
      * @param codigo do ticket a ser analisado
@@ -91,14 +89,14 @@ public class Operador {
                         if (ticket.getValor() == 0) {
                             if (calendarioTicket.get(Calendar.DATE) == calendarioAtual.get(Calendar.DATE)) {
                                 int horaCalculada = calendarioAtual.get(Calendar.HOUR_OF_DAY) - calendarioTicket.get(Calendar.HOUR_OF_DAY);
-                               
-                                    valorCalculado = valorTicketTabela.getValor();
-                                
+
+                                valorCalculado = valorTicketTabela.getValor();
+
                             }
 
                         }
                         try {
-                            DateTime start = new DateTime(calendarioTicket.get(Calendar.YEAR), calendarioTicket.get(Calendar.MONTH), calendarioTicket.get(Calendar.DATE), 1,0, 0);
+                            DateTime start = new DateTime(calendarioTicket.get(Calendar.YEAR), calendarioTicket.get(Calendar.MONTH), calendarioTicket.get(Calendar.DATE), 1, 0, 0);
                             DateTime end = new DateTime(calendarioAtual.get(Calendar.YEAR), calendarioAtual.get(Calendar.MONTH), calendarioAtual.get(Calendar.DATE), 1, 0, 0);
                             numberDays = Days.daysBetween(start, end).getDays();
 
@@ -121,7 +119,6 @@ public class Operador {
 
         }
 
-
     }
 
     /**
@@ -131,14 +128,19 @@ public class Operador {
      * @throws EstacionamentoException
      */
     public String pagaTicket(int codigo) throws EstacionamentoException {
-        Calendar calendar = Calendar.getInstance();
-        int horaAtual = calendar.get(Calendar.HOUR_OF_DAY);
 
-        if (horaAtual < 2 || horaAtual >= 8) {
+        if (verificaSeOEstacionamentoEstaAberto()) {
             ITicket ticket;
             IValoresTickets valorTicketTabela = new ValoresTicketsImpl();
             try {
                 ticket = baseEstacionamento.getTicket(codigo);
+                if (ticket.isLiberado()) {
+                    return "Ticket Liberado";
+                }
+                if (ticket.isPago() && ticket.isLiberado()) {
+                    return "Ticket pago e Liberado";
+                }
+
                 if (!ticket.isPago() && !ticket.isLiberado()) {
 
                     double calcularOValorDevido = calcularOValorDevido(codigo);
@@ -182,20 +184,34 @@ public class Operador {
         }
     }
 
-
-    
-        /**
+    /**
      *
-     * @param dia dia selecionado para liberar os tickets
+     * @param ticket
      * @return indica se foi bem ou mau sucedida a ação
      * @throws negocio.EstacionamentoException
      */
-    public boolean  liberarTicketSemPagamento(ITicket ticket)  throws EstacionamentoException {
-        try {
-            return baseEstacionamento.liberaTicket(ticket);
-        } catch (EstacionamentoDAOException ex) {
-            throw new EstacionamentoException(ex);
+    public boolean liberarTicketSemPagamento(ITicket ticket) throws EstacionamentoException {
+        if (verificaSeOEstacionamentoEstaAberto()) {
+            try {
+                ticket = baseEstacionamento.getTicket(ticket.getId());
+                if (!ticket.isLiberado()) {
+                    ticket.setLibera(true);
+                    return baseEstacionamento.liberaTicket(ticket);
+                } else {
+                    return ticket.isLiberado();
+                }
+
+            } catch (EstacionamentoDAOException ex) {
+                throw new EstacionamentoException(ex);
+            }
         }
+        return false;
     }
 
+    public boolean verificaSeOEstacionamentoEstaAberto() {
+
+        Calendar calendar = Calendar.getInstance();
+        int horaAtual = calendar.get(Calendar.HOUR_OF_DAY);
+        return horaAtual < 2 || horaAtual >= 8;
+    }
 }

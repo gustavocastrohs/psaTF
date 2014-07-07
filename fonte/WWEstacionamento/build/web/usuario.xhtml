@@ -1,31 +1,31 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      >
+
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Usuario</title>
     </h:head>
     <h:body>
-     
-          
- <h:form>
+
+
+        <h:form>
 
             
-           Sua placa:<br/>
-            <h:inputText id="idTicket" value="#{fachadaBean.placa}"/>
+            Sua placa:<br/>
+            <h:inputText id="placa" value="#{fachadaBean.placa}"/>
             <br/>
 
             Sua chave:<br/>
-            <h:inputText id="Chave" value="#{fachadaBean.chave}"/>
+            <h:inputText id="chave" value="#{fachadaBean.chave}"/>
             <br/>
-            <h:commandButton 
-                id="btEnviar"
-                value="Enviar"
-                action="#{fachadaBean.usuarioGeraCodigoDeBarras()}"
-            />
-        
+     
+            <h:commandButton  id="commandButton2"   value="Enviar"  action ="#{fachadaBean.vaiParaProximaPaginaUser()}" >
+
+
+            </h:commandButton>
+
+
         </h:form>
-      
-       
-    
-       </h:body>
+
+    </h:body>
 </html>

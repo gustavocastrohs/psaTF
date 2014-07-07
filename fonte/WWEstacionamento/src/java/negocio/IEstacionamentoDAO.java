@@ -5,6 +5,7 @@
 package negocio;
 
 import java.sql.Timestamp;
+import java.util.List;
 import persistencia.EstacionamentoDAOException;
 
 /**
@@ -16,6 +17,7 @@ public interface IEstacionamentoDAO {
     
   /**
      *
+     * @param placa
      * @return devolve um ticket criado automaticamente pelo sistema
      * @throws EstacionamentoDAOException
      */
@@ -50,7 +52,8 @@ public interface IEstacionamentoDAO {
      * @return o valor total de estadias segundo o periodo selecionado
      * @throws EstacionamentoDAOException
      */
-    double getValorTotalEstadia(Timestamp dia, int mes) throws EstacionamentoDAOException;
+    
+    double getValorTotalEstadia(  int mes,int ano) throws EstacionamentoDAOException;
    /**
      *
      * @param dia usa um Timestamp para buscar o dia sendo se este estiver null
@@ -60,18 +63,16 @@ public interface IEstacionamentoDAO {
      * @return o valor total de tickets pagos segundo o periodo selecionado
      * @throws EstacionamentoDAOException
      */
-    int getNumeroDeTicketsPagos(Timestamp dia, int mes) throws EstacionamentoDAOException;
+    
+    int getNumeroDeTicketsPagos( int mes,int ano) throws EstacionamentoDAOException;
+
     /**
      *
-     * @param dia usa um Timestamp para buscar o dia sendo se este estiver null
-     * será pelo mes
-     * @param mes valor que escolhe o mes para a busca adiciona +1 pois vem de
-     * um array que começa em zero e não são 11 mas 12 meses o ano
-     * @return o numero total de tickets liberados sem pagamento segundo o
-     * periodo selecionado
+     * @param mes
+     * @return
      * @throws EstacionamentoDAOException
      */
-    int getNumeroDeTicketsLiberadosSemPagamento(Timestamp dia, int mes) throws EstacionamentoDAOException;
+    public int getNumeroDeTicketsLiberadosSemPagamento( int mes,int ano) throws EstacionamentoDAOException;
     /**
      *
      * @param ticket recebe um Iticket e aplica um update nele
@@ -104,5 +105,5 @@ public interface IEstacionamentoDAO {
      */
     ITicket getTicketComPlacaEChave(String placa, String chave) throws EstacionamentoDAOException;
     
- 
+    public List<ITicket>  getAllTickets() throws EstacionamentoDAOException ;
 }

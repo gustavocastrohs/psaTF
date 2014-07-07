@@ -42,9 +42,10 @@ public class ModuloGerencial {
      * @return o valor total de tickets pagos segundo o periodo selecionado
      * @throws negocio.EstacionamentoException
      */
-    public int getNumeroDeTicketsPagos(Timestamp dia, int mes) throws EstacionamentoException {
+
+       public int getNumeroDeTicketsPagos(int mes,int ano) throws EstacionamentoException {
         try {
-            return baseEstacionamento.getNumeroDeTicketsPagos(dia, mes);
+            return baseEstacionamento.getNumeroDeTicketsPagos( mes,ano);
         } catch (EstacionamentoDAOException ex) {
             throw new EstacionamentoException(ex);
         }
@@ -60,9 +61,10 @@ public class ModuloGerencial {
      * periodo selecionado
      * @throws negocio.EstacionamentoException
      */
-    public Integer getNumeroDeTicketsLiberadosSemPagamento(Timestamp dia, int mes) throws EstacionamentoException {
+
+        public Integer getNumeroDeTicketsLiberadosSemPagamento( int mes,int ano) throws EstacionamentoException {
         try {
-            return baseEstacionamento.getNumeroDeTicketsLiberadosSemPagamento(dia, mes);
+            return baseEstacionamento.getNumeroDeTicketsLiberadosSemPagamento(mes, ano);
         } catch (EstacionamentoDAOException ex) {
             throw new EstacionamentoException(ex);
         }
@@ -78,9 +80,10 @@ public class ModuloGerencial {
      * @return o valor total de estadias segundo o periodo selecionado
      * @throws EstacionamentoException
      */
-    public double getValorTotalEstadia(Timestamp dia, int mes) throws EstacionamentoException {
+
+        public double getValorTotalEstadia( int mes,int ano) throws EstacionamentoException {
         try {
-            return baseEstacionamento.getValorTotalEstadia(dia, mes);
+            return baseEstacionamento.getValorTotalEstadia(mes,ano);
         } catch (EstacionamentoDAOException ex) {
             throw new EstacionamentoException(ex);
         }

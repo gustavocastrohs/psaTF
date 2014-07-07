@@ -9,9 +9,41 @@
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>UsuarioServlet</servlet-name>
+        <servlet-class>servlet.UsuarioServlet</servlet-class>
+        <init-param>
+            <param-name>placa</param-name>
+            <param-value>valo1</param-value>
+        </init-param>
+        <init-param>
+            <param-name>chave</param-name>
+            <param-value>valor2</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>ListagemTickets</servlet-name>
+        <servlet-class>servlet.ListagemTickets</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>showCodeBar</servlet-name>
+        <servlet-class>servlet.showCodeBar</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UsuarioServlet</servlet-name>
+        <url-pattern>/UsuarioServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListagemTickets</servlet-name>
+        <url-pattern>/ListagemTickets</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>showCodeBar</servlet-name>
+        <url-pattern>/showCodeBar</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

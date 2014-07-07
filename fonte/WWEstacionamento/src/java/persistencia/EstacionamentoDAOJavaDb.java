@@ -37,11 +37,13 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
         }
 
     }
-/**
- *  Instancia a classe de conexão e verifica se existe ou não um banco criado
- * se não existir cria um;
- * @throws EstacionamentoDAOException 
- */
+
+    /**
+     * Instancia a classe de conexão e verifica se existe ou não um banco criado
+     * se não existir cria um;
+     *
+     * @throws EstacionamentoDAOException
+     */
     private EstacionamentoDAOJavaDb() throws EstacionamentoDAOException {
         try {
             Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
@@ -77,21 +79,21 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
             Connection con = DriverManager.getConnection("jdbc:derby:derbyDB;create=true");
             Statement sta = con.createStatement();
 // para verificar se um ticket está pago ou não basta verificar se o falor dele é ou não maior que zero.
-            String sql = ""+
-"create table TICKET\n" +
-"(\n" +
-"	ID INTEGER  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),\n" +
-"	CODIGO INTEGER default 1 not null,\n" +
-"	PLACA VARCHAR(7),\n" +
-"	CHAVE VARCHAR(5),\n" +
-"	LIBERADO BOOLEAN default FALSE not null,\n" +
-"	PAGO BOOLEAN default FALSE not null,\n" +
-"	PERNOITE BOOLEAN default FALSE not null,\n" +
-"	VALOR DOUBLE default 0.0,\n" +
-"        DATAIMPRESSAO TIMESTAMP default CURRENT_TIMESTAMP not null,\n" +
-"	DATAPAGAMENTO TIMESTAMP,\n" +
-"        CONSTRAINT primary_key PRIMARY KEY (id)\n" +
-")";
+            String sql = ""
+                    + "create table TICKET\n"
+                    + "(\n"
+                    + "	ID INTEGER  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),\n"
+                    + "	CODIGO INTEGER default 1 not null,\n"
+                    + "	PLACA VARCHAR(7),\n"
+                    + "	CHAVE VARCHAR(5),\n"
+                    + "	LIBERADO BOOLEAN default FALSE not null,\n"
+                    + "	PAGO BOOLEAN default FALSE not null,\n"
+                    + "	PERNOITE BOOLEAN default FALSE not null,\n"
+                    + "	VALOR DOUBLE default 0.0,\n"
+                    + "        DATAIMPRESSAO TIMESTAMP default CURRENT_TIMESTAMP not null,\n"
+                    + "	DATAPAGAMENTO TIMESTAMP,\n"
+                    + "        CONSTRAINT primary_key PRIMARY KEY (id)\n"
+                    + ")";
             sta.executeUpdate(sql);
             sta.close();
             con.close();
@@ -132,7 +134,6 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
                                 res.getTimestamp("DATAPAGAMENTO"),
                                 res.getString("PLACA"),
                                 res.getString("CHAVE")
-                        
                         );
                         lista.add(t);
                     }
@@ -152,6 +153,46 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
         }
         return null;
     }
+    
+    
+    @Override
+    public List<ITicket>  getAllTickets() throws EstacionamentoDAOException {
+        
+        
+            List<ITicket> lista = new LinkedList<>();
+
+            String sql = "SELECT ID,CODIGO,DATAIMPRESSAO,VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE from TICKET";
+            try {
+                try (Connection con = getConnection()) {
+                    Statement sta = con.createStatement();
+                    ResultSet res = sta.executeQuery(sql);
+                    while (res.next()) {
+                        ITicket t = new Ticket(
+                                res.getInt("ID"),
+                                res.getInt("CODIGO"),
+                                res.getTimestamp("DATAIMPRESSAO"),
+                                res.getDouble("VALOR"),
+                                res.getBoolean("LIBERADO"),
+                                res.getBoolean("PAGO"),
+                                res.getBoolean("PERNOITE"),
+                                res.getTimestamp("DATAPAGAMENTO"),
+                                res.getString("PLACA"),
+                                res.getString("CHAVE")
+                        );
+                        lista.add(t);
+                    }
+                    res.close();
+                    sta.close();
+                }
+
+            } catch (Exception ex) {
+                throw new EstacionamentoDAOException("Falha na busca. " + ex.getMessage());
+            }
+
+
+        
+        return lista;
+    }
 
     /**
      *
@@ -160,10 +201,10 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
      */
     @Override
     public ITicket adicionarTicketAutomatico(String placa) throws EstacionamentoDAOException {
-        
+
         try {
             Connection con = getConnection();
-            String sql = " INSERT INTO APP.TICKET (PLACA,CHAVE)  VALUES ('"+placa+"','"+geraChave()+"') ";
+            String sql = " INSERT INTO APP.TICKET (PLACA,CHAVE)  VALUES ('" + placa + "','" + geraChave() + "') ";
             PreparedStatement sta = con.prepareStatement(sql);
             sta.executeUpdate();
             sta.close();
@@ -204,8 +245,6 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
             return false;
         }
     }
-
-
 
     /**
      *
@@ -251,26 +290,13 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
         }
     }
 
-    /**
-     *
-     * @param dia usa um Timestamp para buscar o dia sendo se este estiver null
-     * será pelo mes
-     * @param mes valor que escolhe o mes para a busca adiciona +1 pois vem de
-     * um array que começa em zero e não são 11 mas 12 meses o ano
-     * @return o valor total de estadias segundo o periodo selecionado
-     * @throws EstacionamentoDAOException
-     */
-    @Override
-    public double getValorTotalEstadia(Timestamp dia, int mes) throws EstacionamentoDAOException {
-        mes++;
 
+    public double getValorTotalEstadia(int mes,int ano) throws EstacionamentoDAOException {
+       
         String sql = "";
 
-        if (dia != null) {
-            sql = "SELECT SUM(VALOR) FROM TICKET WHERE DATE(TICKET.\"DATAPAGAMENTO\") = DATE(TIMESTAMP('" + dia + "')) AND PAGO = TRUE AND PERNOITE = TRUE";
-        } else {
-            sql = "SELECT SUM(VALOR) FROM TICKET WHERE MONTH(TICKET.\"DATAPAGAMENTO\") = " + mes + " AND PAGO = TRUE AND PERNOITE = TRUE";
-        }
+             sql = "SELECT COUNT(*) FROM TICKET WHERE MONTH(TICKET.\"DATAPAGAMENTO\") = " + mes + " AND YEAR(TICKET.\"DATAPAGAMENTO\") = " + ano + " AND PAGO = TRUE AND PERNOITE = TRUE";
+  
         try {
             double resultado = 0;
             try (Connection con = getConnection()) {
@@ -288,27 +314,15 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
         }
 
     }
+  
 
-    /**
-     *
-     * @param dia usa um Timestamp para buscar o dia sendo se este estiver null
-     * será pelo mes
-     * @param mes valor que escolhe o mes para a busca adiciona +1 pois vem de
-     * um array que começa em zero e não são 11 mas 12 meses o ano
-     * @return o valor total de tickets pagos segundo o periodo selecionado
-     * @throws EstacionamentoDAOException
-     */
-    @Override
-    public int getNumeroDeTicketsPagos(Timestamp dia, int mes) throws EstacionamentoDAOException {
-        mes++;
+        public int getNumeroDeTicketsPagos(int mes,int ano) throws EstacionamentoDAOException {
 
         String sql = "";
 
-        if (dia != null) {
-            sql = "SELECT COUNT(*) FROM TICKET WHERE DATE(TICKET.\"DATAPAGAMENTO\") = DATE(TIMESTAMP('" + dia + "')) AND PAGO = TRUE";
-        } else {
-            sql = "SELECT COUNT(*) FROM TICKET WHERE MONTH(TICKET.\"DATAPAGAMENTO\") = " + mes + " AND PAGO = TRUE";
-        }
+
+             sql = "SELECT COUNT(*) FROM TICKET WHERE MONTH(TICKET.\"DATAPAGAMENTO\") = " + mes + " AND YEAR(TICKET.\"DATAPAGAMENTO\") = " + ano+ " AND PAGO = TRUE";
+        
         int resultado = 0;
         try {
             try (Connection con = getConnection()) {
@@ -326,30 +340,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
         }
 
     }
-
-    /**
-     *
-     * @param dia dia selecionado para liberar os tickets
-     * @return indica se foi bem ou mau sucedida a ação
-     * @throws EstacionamentoDAOException
-     */
-  //  @Override
-    public boolean liberaTodosTickets(Timestamp dia) throws EstacionamentoDAOException {
-        String sql = "UPDATE   TICKET SET   TICKET.LIBERADO = TRUE WHERE DATE(TICKET.\"DATAIMPRESSAO\") = DATE(TIMESTAMP('" + dia + "')) ";
-        try {
-            try (Connection con = getConnection()) {
-                Statement sta = con.createStatement();
-                int res = sta.executeUpdate(sql);
-
-                sta.close();
-                return true;
-            }
-
-        } catch (Exception ex) {
-            return false;
-        }
-
-    }
+    
 
     /**
      *
@@ -361,17 +352,15 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
      * periodo selecionado
      * @throws EstacionamentoDAOException
      */
-    @Override
-    public int getNumeroDeTicketsLiberadosSemPagamento(Timestamp dia, int mes) throws EstacionamentoDAOException {
-        mes++;
+    
+    public int getNumeroDeTicketsLiberadosSemPagamento(int mes,int ano) throws EstacionamentoDAOException {
 
         String sql = "";
 
-        if (dia != null) {
-            sql = "SELECT COUNT(*) FROM TICKET WHERE DATE(TICKET.\"DATAIMPRESSAO\") = DATE(TIMESTAMP('" + dia + "')) AND PAGO = FALSE AND LIBERADO = TRUE";
-        } else {
-            sql = "SELECT COUNT(*) FROM TICKET WHERE MONTH(TICKET.\"DATAIMPRESSAO\") = " + mes + " AND PAGO = FALSE AND LIBERADO = TRUE";
-        }
+        
+        
+            sql = "SELECT COUNT(*) FROM TICKET WHERE MONTH(DATAIMPRESSAO) = " + mes + " AND YEAR(DATAIMPRESSAO) = " + ano +" AND PAGO = FALSE AND LIBERADO = TRUE";
+        
         int resultado = 0;
         try {
 
@@ -427,7 +416,7 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
                 res.close();
                 sta.close();
             }
-            return !"".equals(resultado);
+            return "APP.TICKET".equalsIgnoreCase(resultado) ||"TICKET".equalsIgnoreCase(resultado);
         } catch (SQLException ex) {
             return false;
         }
@@ -442,38 +431,24 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
     public static void inicializaDadosNoBanco() throws EstacionamentoDAOException {
         try {
             String sql = ""
-                    + "INSERT INTO APP.TICKET (CODIGO, DATAIMPRESSAO, VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE)  VALUES"
-                    + "(DEFAULT,'2013-11-20 14:13:46.844',3.5,TRUE,TRUE,DEFAULT,'2013-11-20 14:50:46.844','ASD6574','awe87'),"
-                    + "(DEFAULT,'2013-11-20 19:13:46.844',10.0,TRUE,TRUE,DEFAULT,'2013-11-20 14:50:46.844','AXC3574','aw787'),"
-                    + "(DEFAULT,'2013-11-20 19:13:46.844',50.0,TRUE,TRUE,TRUE,'2013-11-21 14:50:46.844','AWE2174','a8e87'),"
-                    + "(DEFAULT,'2013-11-20 08:13:46.844',200.0,TRUE,TRUE,TRUE,'2013-11-24 14:50:46.844','ASD4789','a9e87')"
-                    ;
+                    + "INSERT INTO APP.TICKET (CODIGO, DATAIMPRESSAO, VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE)  VALUES"                    
+                    + "(DEFAULT,'2014-01-20 19:13:46.844',10.0,TRUE,TRUE,DEFAULT,'2014-01-20 14:50:46.844','AXC3574','aw787'),"
+                    + "(DEFAULT,'2014-01-20 19:13:46.844',50.0,TRUE,TRUE,TRUE,'2014-01-20 14:50:46.844','AWE2174','a8e87'),";
             Connection con = getConnection();
             PreparedStatement sta = con.prepareStatement(sql);
             sta.executeUpdate();
             sta.close();
             con.close();
-             sql = ""
-                      + "INSERT INTO APP.TICKET (CODIGO, DATAIMPRESSAO, VALOR,LIBERADO,PAGO,PERNOITE,,PLACA,CHAVE)  VALUES"
-                      +"(DEFAULT,'2013-11-20 20:13:46.844',DEFAULT,TRUE,DEFAULT,DEFAULT,'ASD4789','a9887'),"
-                      + "(DEFAULT,'2013-11-20 19:13:46.844',DEFAULT,TRUE,DEFAULT,DEFAULT,'ASD4789','a8787')";
-             con = getConnection();
-             sta = con.prepareStatement(sql);
-            sta.executeUpdate();
-            sta.close();
-            con.close();
             sql = ""
-                    + "INSERT INTO APP.TICKET (DATAIMPRESSAO)  VALUES"
-                    + " ('2013-11-20 14:13:46.844'),"
-                    + "('2013-11-20 15:13:46.844'),"
-                    + "('2013-11-20 16:13:46.844'),"
-                    + "('2013-11-20 17:13:46.844'),"
-                    + "('2013-11-20 18:13:46.844') ";
+                    + "INSERT INTO APP.TICKET (CODIGO, DATAIMPRESSAO, VALOR,LIBERADO,PAGO,PERNOITE,,PLACA,CHAVE)  VALUES"
+                    + "(DEFAULT,'2014-01-20 20:13:46.844',DEFAULT,TRUE,DEFAULT,DEFAULT,'ASD4789','a9887'),"
+                    + "(DEFAULT,'2014-01-20 19:13:46.844',DEFAULT,TRUE,DEFAULT,DEFAULT,'ASD4789','a8787')";
             con = getConnection();
             sta = con.prepareStatement(sql);
             sta.executeUpdate();
             sta.close();
             con.close();
+           
             sql = ""
                     + "INSERT INTO APP.TICKET (CODIGO, DATAIMPRESSAO, VALOR,LIBERADO,PAGO,PERNOITE)  VALUES "
                     + "(0, '2013-11-20 11:13:46.844', 50.0, DEFAULT,DEFAULT,DEFAULT),"
@@ -492,8 +467,8 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
 
     @Override
     public boolean liberaTicket(ITicket ticket) throws EstacionamentoDAOException {
-       
-        String sql = "UPDATE   TICKET SET   TICKET.LIBERADO = TRUE WHERE DATE(TICKET.ID ="+ticket.getId();
+
+        String sql = "UPDATE TICKET  SET   TICKET.LIBERADO = TRUE WHERE TICKET.ID =" + ticket.getId();
         try {
             try (Connection con = getConnection()) {
                 Statement sta = con.createStatement();
@@ -510,62 +485,59 @@ public class EstacionamentoDAOJavaDb implements negocio.IEstacionamentoDAO {
 
     @Override
     public ITicket getTicketComPlacaEChave(String placa, String chave) throws EstacionamentoDAOException {
-   
+
         List<ITicket> lista = new LinkedList<>();
 
-            String sql = "SELECT ID,CODIGO,DATAIMPRESSAO,VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE from TICKET where TICKET.PLACA = '" + placa+ "' and TICKET.CHAVE= '"+chave+"'";
-            try {
-                try (Connection con = getConnection()) {
-                    Statement sta = con.createStatement();
-                    ResultSet res = sta.executeQuery(sql);
-                    while (res.next()) {
-                        ITicket t = new Ticket(
-                                res.getInt("ID"),
-                                res.getInt("CODIGO"),
-                                res.getTimestamp("DATAIMPRESSAO"),
-                                res.getDouble("VALOR"),
-                                res.getBoolean("LIBERADO"),
-                                res.getBoolean("PAGO"),
-                                res.getBoolean("PERNOITE"),
-                                res.getTimestamp("DATAPAGAMENTO"),
-                                res.getString("PLACA"),
-                                res.getString("CHAVE")
-                        );
-                        lista.add(t);
-                    }
-                    res.close();
-                    sta.close();
+        String sql = "SELECT ID,CODIGO,DATAIMPRESSAO,VALOR,LIBERADO,PAGO,PERNOITE,DATAPAGAMENTO,PLACA,CHAVE from TICKET where TICKET.PLACA = '" + placa + "' and TICKET.CHAVE= '" + chave + "'";
+        try {
+            try (Connection con = getConnection()) {
+                Statement sta = con.createStatement();
+                ResultSet res = sta.executeQuery(sql);
+                while (res.next()) {
+                    ITicket t = new Ticket(
+                            res.getInt("ID"),
+                            res.getInt("CODIGO"),
+                            res.getTimestamp("DATAIMPRESSAO"),
+                            res.getDouble("VALOR"),
+                            res.getBoolean("LIBERADO"),
+                            res.getBoolean("PAGO"),
+                            res.getBoolean("PERNOITE"),
+                            res.getTimestamp("DATAPAGAMENTO"),
+                            res.getString("PLACA"),
+                            res.getString("CHAVE")
+                    );
+                    lista.add(t);
                 }
-
-            } catch (SQLException ex) {
-                throw new EstacionamentoDAOException("Falha na busca. " + ex.getMessage());
-            }
-            if (!lista.isEmpty()) {
-                return (ITicket) lista.get(0);
-            } else {
-                return null;
+                res.close();
+                sta.close();
             }
 
-        
-  
+        } catch (SQLException ex) {
+            throw new EstacionamentoDAOException("Falha na busca. " + ex.getMessage());
+        }
+        if (!lista.isEmpty()) {
+            return (ITicket) lista.get(0);
+        } else {
+            return null;
+        }
+
     }
 
     private String geraChave() {
-            
+
         String chave = "";
-        
+
         Random gerador = new Random();
-        	ArrayList<String> alfabeto = new ArrayList( Arrays.asList( "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
-"R", "S", "T", "U", "V", "W", "X", "Y", "Z","0","1", "2","3","4","5","6","7","8","9"));
-        for (int i = 0;i<5;i++){
-        int numero = gerador.nextInt(36);
-        chave = chave + alfabeto.get(numero);
-        
+        ArrayList<String> alfabeto = new ArrayList(Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
+                "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"));
+        for (int i = 0; i < 5; i++) {
+            int numero = gerador.nextInt(36);
+            chave = chave + alfabeto.get(numero);
+
         }
         System.out.println(chave);
         return chave;
-        
-    }
 
+    }
 
 }

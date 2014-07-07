@@ -12,6 +12,15 @@ import negocio.EstacionamentoException;
 import negocio.FachadaEstacionamento;
 import negocio.ITicket;
 import persistencia.Ticket;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -32,6 +41,24 @@ public class FachadaBean {
     private String placa;
     private String chave;
     private String codigoBarras;
+    private String proximaPagina = "";
+    private ITicket ticketCompleto = null;
+
+    public ITicket getTicketCompleto() {
+        return ticketCompleto;
+    }
+
+    public void setTicketCompleto(ITicket ticketCompleto) {
+        this.ticketCompleto = ticketCompleto;
+    }
+
+    public String getProximaPagina() {
+        return proximaPagina;
+    }
+
+    public void setProximaPagina(String proximaPagina) {
+        this.proximaPagina = proximaPagina;
+    }
 
     public String getIdTicket() {
         return idTicket;
@@ -97,7 +124,6 @@ public class FachadaBean {
         this.codigoBarras = codigoBarras;
     }
 
-
     public void validacaoDeTicketCancelaSaida() {
 
         resultado = fachada.validacaoDeTicketCancelaSaida(Integer.parseInt(idTicket));
@@ -112,15 +138,22 @@ public class FachadaBean {
         }
     }
 
-    public void usuarioGeraCodigoDeBarras() {
-        codigoBarras = fachada.usuarioGeraCodigoDeBarras(placa, chave);
+    public ITicket usuarioGeraCodigoDeBarras() {
+        try {
+           return ticketCompleto = fachada.usuarioGeraCodigoDeBarras(placa, chave);
+           
+            }
+         catch (EstacionamentoException ex) {
+            return null;
+        }
+
     }
 
-    public String calcularOQueTemQueSerPago() {
+    public void calcularOQueTemQueSerPago() {
         try {
-            return fachada.calcularOQueTemQueSerPago(Integer.parseInt(idTicket));
+            resultado = fachada.calcularOQueTemQueSerPago(Integer.parseInt(idTicket));
         } catch (EstacionamentoException ex) {
-            return ex.getMessage();
+            resultado = ex.getMessage();
         }
     }
 
@@ -141,48 +174,81 @@ public class FachadaBean {
     }
 
     public void getNumeroDeTicketsLiberadosSemPagamento() {
-
+        resultado = "";
         try {
-            Timestamp s = new Timestamp(ano, mes, dia, 0, 0, 0, 0);
-            resultado = "" + fachada.getNumeroDeTicketsLiberadosSemPagamento(s, mes);
+
+            resultado = "" + fachada.getNumeroDeTicketsLiberadosSemPagamento(mes, ano);
+
         } catch (EstacionamentoException ex) {
             resultado = ex.getMessage();
         }
     }
 
     public void getNumeroDeTicketsPagos() {
-
+        resultado = "";
         try {
-            Timestamp s = new Timestamp(ano, mes, dia, 0, 0, 0, 0);
-            resultado = "" + fachada.getNumeroDeTicketsPagos(s, mes);
+
+            resultado = "" + fachada.getNumeroDeTicketsLiberadosSemPagamento(mes, ano);
+
         } catch (EstacionamentoException ex) {
             resultado = ex.getMessage();
         }
     }
 
     public void liberarTicketSemPagamento() {
-
+        resultado = "";
         try {
             ITicket t = new Ticket(Integer.parseInt(idTicket));
 
-            resultado =  "" + fachada.liberarTicketSemPagamento(t);
+            boolean resp = fachada.liberarTicketSemPagamento(t);
+            if (resp) {
+                resultado = "Ticket Liberado";
+            } else {
+                resultado = "Ticket não liberado";
+            }
         } catch (EstacionamentoException ex) {
-            resultado =  ex.getMessage();
+            resultado = "Ticket com defeito";
         }
     }
 
-    public void geraCodigoDeBarras() throws Exception {
-        fachada.geraCodigoDeBarras(idTicket);
-
-    }
-
-    public void getValorTotalEstadia() throws EstacionamentoException {
-        Timestamp s = new Timestamp(ano, mes, dia, 0, 0, 0, 0);
-        resultado = "" + fachada.getValorTotalEstadia(s, mes);
+    public void getValorTotalEstadia() {
+        try {
+            resultado = "" + fachada.getNumeroDeTicketsLiberadosSemPagamento(mes, ano);
+        } catch (EstacionamentoException ex) {
+            resultado = ex.getMessage();
+        }
 
     }
 
     public void pagaTicket() throws EstacionamentoException {
         resultado = fachada.pagaTicket(Integer.parseInt(idTicket));
     }
+
+    /**
+     * Forwards the {@link javax.servlet.http.HttpServletRequest} and
+     * {@link javax.servlet.http.HttpServletResponse} to a servlet URL pattern
+     * called {@literal /process}, and sets the
+     * {@link javax.faces.context.FacesContext#responseComplete()}.
+     */
+    public void vaiParaProximaPaginaUser() {
+        try {
+
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            ExternalContext ectx = ctx.getExternalContext();
+
+            HttpServletRequest request = (HttpServletRequest) ectx.getRequest();
+            HttpServletResponse response = (HttpServletResponse) ectx.getResponse();
+            request.setAttribute("placa", placa);
+            request.setAttribute("chave", chave);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/UsuarioServlet");
+
+            dispatcher.forward(request, response);
+            ctx.responseComplete();
+        } catch (ServletException ex) {
+            Logger.getLogger(FachadaBean.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FachadaBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
